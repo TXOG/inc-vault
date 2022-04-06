@@ -10,6 +10,7 @@ An encrypted vault to help hide and protect files
 ### Download
 * Download all the files from the releases tab or gitclone the repo
 * Make sure you have python and pip installed
+* Main.py and functions.py must be in the same directory
 ### Pip install
 Run these commands in terminal:
 * pip install bcrypt
