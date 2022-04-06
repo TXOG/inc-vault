@@ -442,6 +442,9 @@ def setup():
         os.makedirs(newpath)
     file = open('setupdone.ivd', 'w+')
     file.close()
+    file = open('openfile.ivd', 'w+')
+    file.write("NONE")
+    file.close()
     os.system('cls||clear')
 
 
