@@ -7,18 +7,27 @@ An encrypted vault to help hide and protect files
 * Create an exception for the entire directory if you are running an antivirus
 
 ## Install
-### Download
-* Download all the files from the releases tab or gitclone the repo
+### Gitclone
+#### Download
+* Gitclone the repo
 * Make sure you have python and pip installed
 * Main.py and functions.py must be in the same directory
-### Pip install
+#### Pip install
 Run these commands in terminal:
 * pip install bcrypt
 * pip install hashlib
 * pip install pathlib
 * pip install cryptography
-### Run
+#### Run
 Run the main.py file (running any others will do nothing)
+### Exe download
+#### Download
+* Download the latest release from the releases tab
+#### Extract
+* Extraxt the .zip file
+* Find the IncVault.exe file
+#### Run
+* Run IncVault.exe (You may also want to create a shortcut)
 
 ## Credits
 Developer - Thomas Kerby
