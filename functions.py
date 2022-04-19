@@ -8,6 +8,70 @@ import pathlib
 from cryptography.fernet import Fernet
 from pathlib import Path
 import base64
+import atexit
+import time
+from time import sleep
+
+
+def listcmd():
+    global lockerdir
+    print(os.listdir(lockerdir))
+
+
+def removecmd():
+    couldntremove = ("NONE")
+    filepath = filedialog.askopenfilename(initialdir="./locker",
+                                          title="Select a File",
+                                          filetypes=(("all files",
+                                                      "*.*"),
+                                                     ("all files",
+                                                      "*.*")))
+    rusure = input("Are you sure you want to remove this file(y/n): ")
+    rusure = rusure.lower()
+    if rusure == ("y"):
+        try:
+            filename = pathlib.Path(filepath).stem
+            couldntremove = (filename)
+            os.remove(filepath)
+            namefile = (str(filename) + str(".ive"))
+            couldntremove = (namefile)
+            os.remove(namefile)
+            namefile = (str(filename) + str(".ivd"))
+            couldntremove = (namefile)
+            os.remove(namefile)
+            namefile = (str(filename) + str(".ivs"))
+            couldntremove = (namefile)
+            os.remove(namefile)
+            print("Successfully removed file")
+        except:
+            print("There was an error removing file")
+            print("Couldn't remove:")
+            print(couldntremove)
+    else:
+        print("Cancelled")
+
+
+def exit_handler():
+    print("Exiting")
+    file = open('openfile.ivd', 'r+')
+    canexit = file.read()
+    file.close()
+    if canexit != ("NONE"):
+        filename = pathlib.Path(canexit).stem
+        namefile = (str(filename) + str('.ivd'))
+        file = open(namefile, 'r+')
+        type = file.read()
+        file.close()
+        if type == ("sp"):
+            print("A file can't be closed as it has a second password, please reopen the application and close this file")
+            print("Closing in 10 seconds")
+            time.sleep(10)
+        else:
+            print("Looks like you didn't close a file, closing it now")
+            closecmd()
+
+
+atexit.register(exit_handler)
 
 global custompass
 global filepath
@@ -25,7 +89,7 @@ lockerdir = (str(initialdir) + str('/locker'))
 
 
 def helpcmd():
-    print("Here's a list of all commands that are avaliable at the moment: \n \nadd: Use this by istelf, adds a file to the system \nclose: Use this by itself, closes the last file opened (don't forget to do this before exiting) \nexit: Use this by itself, exits the program \nhelp: Shows this message :) \nopen: Use this by itself, opens a file selected from a gui")
+    print("Here's a list of all commands that are avaliable at the moment: \n \nadd: Use this by istelf, adds a file to the system \nclose: Use this by itself, closes the last file opened (don't forget to do this before exiting) \nexit: Use this by itself, exits the program \nhelp: Shows this message :) \nlist: Use this by itself, lists all the files in your locker \nopen: Use this by itself, opens a file selected from a gui \nremove: Use this by itself, deletes a file selected from a gui")
 
 
 def finishedprocess():
@@ -71,7 +135,7 @@ def closecmd():
             if data == ("sp"):
                 #gets the user to input their password
                 custompass = input(
-                    "Enter password for this file (This passowrd can be different to the one set previously): ")
+                    "Enter password for this file (This passoword can be different to the one set previously): ")
                 #adds password and salt together - then encodes
                 passnsalt = (str(custompass) + str(salt))
                 passnsalt = passnsalt.encode('utf-8')
@@ -297,7 +361,7 @@ def addcmd():
         global lockerdir
         global initialdir
         #gui to choose files
-        filepath = filedialog.askopenfilename(initialdir="./locker",
+        filepath = filedialog.askopenfilename(initialdir="C:/",
                                               title="Select a File",
                                               filetypes=(("all files",
                                                           "*.*"),
