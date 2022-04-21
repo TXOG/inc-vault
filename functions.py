@@ -1,16 +1,20 @@
-from os.path import exists
-import os
-import bcrypt
-from tkinter import filedialog
-import shutil
-import hashlib
-import pathlib
-from cryptography.fernet import Fernet
-from pathlib import Path
-import base64
-import atexit
-import time
-from time import sleep
+try:
+    from os.path import exists
+    import os
+    import bcrypt
+    from tkinter import filedialog
+    import shutil
+    import hashlib
+    import pathlib
+    from cryptography.fernet import Fernet
+    from pathlib import Path
+    import base64
+    import atexit
+    import time
+except:
+    os.system("pipinstalls.bat")
+    time.sleep(5)
+    os.system('cls||clear')
 
 
 def listcmd():
