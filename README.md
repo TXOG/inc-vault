@@ -11,15 +11,16 @@ An encrypted vault to help hide and protect files
 #### Download
 * Gitclone the repo
 * Make sure you have python and pip installed
-* Main.py and functions.py must be in the same directory
 #### Pip install
+If you are on windows the pip installs will occur for you, if not,
+
 Run these commands in terminal:
 * pip install bcrypt
 * pip install hashlib
 * pip install pathlib
 * pip install cryptography
 #### Run
-Run the main.py file (running any others will do nothing)
+Run the IncVault.py file
 ### Exe download
 #### Download
 * Download the latest release from the releases tab
