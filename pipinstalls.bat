@@ -3,6 +3,8 @@ echo installing bcrypt
 pip install bcrypt
 echo installing pathlib
 pip install pathlib
+echo installing hashlib
+pip install hashlib
 echo installing cryptography
 pip install cryptography
 echo If you have anymore issues then create an issue on the github
