@@ -26,6 +26,7 @@ def listcmd():
 
 
 def removecmd():
+    closecmd()
     couldntremove = ("NONE")
     filepath = filedialog.askopenfilename(initialdir="./locker",
                                           title="Select a File",
