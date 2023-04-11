@@ -11,52 +11,20 @@ try:
     import base64
     import atexit
     import time
+    import glob
 except:
     try:
         os.system("pipinstalls.bat")
         time.sleep(5)
         os.system('cls||clear')
     except:
-        print("An unkown error occured - maybe you don't have python installed")
+        print("An unknown error occured - maybe you don't have python installed")
 
 
 def listcmd():
     global lockerdir
     print(os.listdir(lockerdir))
 
-
-def removecmd():
-    closecmd()
-    couldntremove = ("NONE")
-    filepath = filedialog.askopenfilename(initialdir="./locker",
-                                          title="Select a File",
-                                          filetypes=(("all files",
-                                                      "*.*"),
-                                                     ("all files",
-                                                      "*.*")))
-    rusure = input("Are you sure you want to remove this file(y/n): ")
-    rusure = rusure.lower()
-    if rusure == ("y"):
-        try:
-            filename = pathlib.Path(filepath).stem
-            couldntremove = (filename)
-            os.remove(filepath)
-            namefile = (str(filename) + str(".ive"))
-            couldntremove = (namefile)
-            os.remove(namefile)
-            namefile = (str(filename) + str(".ivd"))
-            couldntremove = (namefile)
-            os.remove(namefile)
-            namefile = (str(filename) + str(".ivs"))
-            couldntremove = (namefile)
-            os.remove(namefile)
-            print("Successfully removed file")
-        except:
-            print("There was an error removing file")
-            print("Couldn't remove:")
-            print(couldntremove)
-    else:
-        print("Cancelled")
 
 
 def exit_handler():
@@ -96,8 +64,42 @@ initialdir = pathlib.Path(__file__).parent.absolute()
 lockerdir = (str(initialdir) + str('/locker'))
 
 
+def removecmd():
+    closecmd()
+    couldntremove = ("NONE")
+    filepath = filedialog.askopenfilename(initialdir="./locker",
+                                          title="Select a File",
+                                          filetypes=(("all files",
+                                                      "*.*"),
+                                                     ("all files",
+                                                      "*.*")))
+    rusure = input("Are you sure you want to remove this file(y/n): ")
+    rusure = rusure.lower()
+    if rusure == ("y"):
+        try:
+            filename = pathlib.Path(filepath).stem
+            couldntremove = (filename)
+            os.remove(filepath)
+            namefile = (str(filename) + str(".ive"))
+            couldntremove = (namefile)
+            os.remove(namefile)
+            namefile = (str(filename) + str(".ivd"))
+            couldntremove = (namefile)
+            os.remove(namefile)
+            namefile = (str(filename) + str(".ivs"))
+            couldntremove = (namefile)
+            os.remove(namefile)
+            print("Successfully removed file")
+        except:
+            print("There was an error removing file")
+            print("Couldn't remove:")
+            print(couldntremove)
+    else:
+        print("Cancelled")
+
+
 def helpcmd():
-    print("Here's a list of all commands that are avaliable at the moment: \n \nadd: Use this by istelf, adds a file to the system \nclose: Use this by itself, closes the last file opened (don't forget to do this before exiting) \nexit: Use this by itself, exits the program \nhelp: Shows this message :) \nlist: Use this by itself, lists all the files in your locker \nopen: Use this by itself, opens a file selected from a gui \nremove: Use this by itself, deletes a file selected from a gui")
+    print("Here's a list of all commands that are avaliable at the moment: \n \nadd: Adds a file to the system \nclose: Closes the last file opened (don't forget to do this before exiting) \nexit: Exits the program \nhelp: Shows this message :) \nlist: Lists all the files in your locker \nopen: Opens a file selected from a gui \npurge: Deletes all files in your locker \nremove: Deletes a file selected from a gui")
 
 
 def finishedprocess():
@@ -498,6 +500,33 @@ def addcmd():
     print("File added successfully")
 
 
+def purgecmd():
+    rusure = input("Are you sure you want to purge your locker(y/n): ")
+    rusure = rusure.lower()
+    if rusure == ("y"):
+        for filename in os.listdir(lockerdir):
+            file_path = os.path.join(lockerdir, filename)
+            try:
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except:
+                print("There was an error while purging your locker")
+
+        delextensions = [".ivd", ".ivs", ".ive"]
+        for file_path in glob.glob(os.path.join(initialdir, "*")):
+            if os.path.splitext(file_path)[1] in delextensions:
+                os.remove(file_path)
+        file = open('setupdone.ivd', 'w+')
+        file.close()
+        file = open('openfile.ivd', 'w+')
+        file.write("NONE")
+        file.close()
+    else:
+        print("Cancelled")
+
+
 def setup():
     global password
     print("Doing first time setup")
@@ -592,6 +621,9 @@ while True:
     if commandinput == ("list"):
         vcommand = True
         listcmd()
+    if commandinput == ("purge"):
+        vcommand = True
+        purgecmd()
     if vcommand == False:
         print("Oops that's not a command \nUse help for a full list of commands")
     else:
