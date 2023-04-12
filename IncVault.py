@@ -12,18 +12,30 @@ try:
     import atexit
     import time
     import glob
-except:
+except Exception as e:
+    file = open('logs/error.log', 'a')
+    errormsg = (str(e) + str('\n'))
+    file.write(errormsg)
+    file.close()
     try:
         os.system("pipinstalls.bat")
         time.sleep(5)
         os.system('cls||clear')
-    except:
-        print("An unknown error occured - maybe you don't have python installed")
+    except Exception as e:
+        print("An unknown error occured - check logs/error.log")
+        file = open('logs/error.log', 'a')
+        errormsg = (str(e) + str('\n'))
+        file.write(errormsg)
+        file.close()
 
 
 def listcmd():
     global lockerdir
     print(os.listdir(lockerdir))
+    file = open('logs/actions.log', 'a')
+    actionmsg = (str("List: Success") + str('\n'))
+    file.write(actionmsg)
+    file.close()
 
 
 
@@ -41,10 +53,18 @@ def exit_handler():
         if type == ("sp"):
             print("A file can't be closed as it has a second password, please reopen the application and close this file")
             print("Closing in 10 seconds")
+            file = open('logs/actions.log', 'a')
+            actionmsg = (str("Exit: Error") + str('\n'))
+            file.write(actionmsg)
+            file.close()
             time.sleep(10)
         else:
             print("Looks like you didn't close a file, closing it now")
             closecmd()
+    file = open('logs/actions.log', 'a')
+    actionmsg = (str("Exit: Success") + str('\n'))
+    file.write(actionmsg)
+    file.close()
 
 
 atexit.register(exit_handler)
@@ -62,6 +82,24 @@ extension = ''
 salt = ''
 initialdir = pathlib.Path(__file__).parent.absolute()
 lockerdir = (str(initialdir) + str('/locker'))
+
+if not os.path.exists('logs/error.log'):
+    file = open('logs/error.log', 'w+')
+    file.close()
+if not os.path.exists('logs/actions.log'):
+    file = open('logs/actions.log', 'w+')
+    file.close()
+
+if os.path.getsize('logs/error.log') > 1000000:
+        file = open('logs/error.log', 'w+')
+        file.seek(0)
+        file.truncate(0)
+        file.close()
+if os.path.getsize('logs/actions.log') > 1000000:
+        file = open('logs/actions.log', 'w+')
+        file.seek(0)
+        file.truncate(0)
+        file.close()
 
 
 def removecmd():
@@ -90,17 +128,32 @@ def removecmd():
             couldntremove = (namefile)
             os.remove(namefile)
             print("Successfully removed file")
-        except:
+            file = open('logs/actions.log', 'a')
+            actionmsg = (str("Remove: Success") + str('\n'))
+            file.write(actionmsg)
+            file.close()
+        except Exception as e:
             print("There was an error removing file")
             print("Couldn't remove:")
             print(couldntremove)
+            file = open('logs/error.log', 'a')
+            errormsg = (str(e) + str('\n'))
+            file.write(errormsg)
+            file.close()
+            file = open('logs/actions.log', 'a')
+            actionmsg = (str("Remove: Error") + str('\n'))
+            file.write(actionmsg)
+            file.close()
     else:
         print("Cancelled")
 
 
 def helpcmd():
     print("Here's a list of all commands that are avaliable at the moment: \n \nadd: Adds a file to the system \nclose: Closes the last file opened (don't forget to do this before exiting) \nexit: Exits the program \nhelp: Shows this message :) \nlist: Lists all the files in your locker \nopen: Opens a file selected from a gui \npurge: Deletes all files in your locker \nremove: Deletes a file selected from a gui \nrename: Renames selected file")
-
+    file = open('logs/actions.log', 'a')
+    actionmsg = (str("Help: Success") + str('\n'))
+    file.write(actionmsg)
+    file.close()
 
 def finishedprocess():
     print("The process was terminated due to an error")
@@ -213,8 +266,21 @@ def closecmd():
             file.close()
             print("File closed successfully")
 
-    except:
+        file = open('logs/actions.log', 'a')
+        actionmsg = (str("Close: Success") + str('\n'))
+        file.write(actionmsg)
+        file.close()
+
+    except Exception as e:
         print("There was an error while trying to close this file")
+        file = open('logs/error.log', 'a')
+        errormsg = (str(e) + str('\n'))
+        file.write(errormsg)
+        file.close()
+        file = open('logs/actions.log', 'a')
+        actionmsg = (str("Close: Error") + str('\n'))
+        file.write(actionmsg)
+        file.close()
         finishedprocess()
         return
 
@@ -263,8 +329,20 @@ def opencmd():
             file = open(namefile, 'r+')
             salt = file.read()
             file.close()
-        except:
+            file = open('logs/actions.log', 'a')
+            actionmsg = (str("Open: Success") + str('\n'))
+            file.write(actionmsg)
+            file.close()
+        except Exception as e:
             print("One or more files don't exist, to open you must restore them")
+            file = open('logs/error.log', 'a')
+            errormsg = (str(e) + str('\n'))
+            file.write(errormsg)
+            file.close()
+            file = open('logs/actions.log', 'a')
+            actionmsg = (str("Open: Error") + str('\n'))
+            file.write(actionmsg)
+            file.close()
             finishedprocess()
             return
 
@@ -314,14 +392,26 @@ def opencmd():
                              + str(filename) + str(extension))
                 os.remove(backupfullfilename)
                 os.startfile(path2open)
-            except:
+                file = open('logs/actions.log', 'a')
+                actionmsg = (str("Open: Success") + str('\n'))
+                file.write(actionmsg)
+                file.close()
+            except Exception as e:
                 print(
                     "There was an error while opening this file, maybe you used the wrong password?")
+                file = open('logs/error.log', 'a')
+                errormsg = (str(e) + str('\n'))
+                file.write(errormsg)
+                file.close()
                 os.chdir(lockerdir)
                 os.remove(backupfullfilename)
                 os.chdir(initialdir)
                 shutil.copy(backuppath, lockerdir)
                 os.remove(backupfullfilename)
+                file = open('logs/actions.log', 'a')
+                actionmsg = (str("Open: Error") + str('\n'))
+                file.write(actionmsg)
+                file.close()
                 finishedprocess()
                 return
         else:
@@ -348,8 +438,20 @@ def opencmd():
                 path2open = (str(lockerdir) + str('/')
                              + str(filename) + str(extension))
                 os.startfile(path2open)
-            except:
+                file = open('logs/actions.log', 'a')
+                actionmsg = (str("Open: Success") + str('\n'))
+                file.write(actionmsg)
+                file.close()
+            except Exception as e:
                 print("There was error while trying to open the file")
+                file = open('logs/error.log', 'a')
+                errormsg = (str(e) + str('\n'))
+                file.write(errormsg)
+                file.close()
+                file = open('logs/actions.log', 'a')
+                actionmsg = (str("Open: Error") + str('\n'))
+                file.write(actionmsg)
+                file.close()
                 finishedprocess()
                 return
         file = open('openfile.ivd', 'w+')
@@ -493,8 +595,20 @@ def addcmd():
             newfilename = (str(filename) + str('.ivf'))
             os.rename(fullfilename, newfilename)
             os.chdir(initialdir)
-    except:
+            file = open('logs/actions.log', 'a')
+            actionmsg = (str("Add: Success") + str('\n'))
+            file.write(actionmsg)
+            file.close()
+    except Exception as e:
         print("There was an error while adding this file")
+        file = open('logs/error.log', 'a')
+        errormsg = (str(e) + str('\n'))
+        file.write(errormsg)
+        file.close()
+        file = open('logs/actions.log', 'a')
+        actionmsg = (str("Add: Error") + str('\n'))
+        file.write(actionmsg)
+        file.close()
         finishedprocess()
         return
     print("File added successfully")
@@ -511,7 +625,19 @@ def purgecmd():
                     os.unlink(file_path)
                 elif os.path.isdir(file_path):
                     shutil.rmtree(file_path)
-            except:
+                file = open('logs/actions.log', 'a')
+                actionmsg = (str("Purge: Success") + str('\n'))
+                file.write(actionmsg)
+                file.close()
+            except Exception as e:
+                file = open('logs/error.log', 'a')
+                errormsg = (str(e) + str('\n'))
+                file.write(errormsg)
+                file.close()
+                file = open('logs/actions.log', 'a')
+                actionmsg = (str("Purge: Error") + str('\n'))
+                file.write(actionmsg)
+                file.close()
                 print("There was an error while purging your locker")
 
         delextensions = [".ivd", ".ivs", ".ive"]
@@ -551,8 +677,20 @@ def renamecmd():
         renamepath = str(initialdir) + str("/") + str(newname) + str(".ivs")
         os.rename(namefile, renamepath)
         print("Successfully renamed file")
+        file = open('logs/actions.log', 'a')
+        actionmsg = (str("Rename: Success") + str('\n'))
+        file.write(actionmsg)
+        file.close()
     except Exception as e:
+        file = open('logs/error.log', 'a')
+        errormsg = (str(e) + str('\n'))
+        file.write(errormsg)
+        file.close()
         print("Failed to rename file")
+        file = open('logs/actions.log', 'a')
+        actionmsg = (str("Rename: Error") + str('\n'))
+        file.write(actionmsg)
+        file.close()
 
 
 def setup():
@@ -587,15 +725,19 @@ def check_setup():
             file = open('password.ivp', 'r')
             checkhash = file.read()
             file.close()
-            #checkhash = checkhash.encode('utf-8')
             passwordcheck = hashlib.sha512(password).digest()
             if str(passwordcheck) == str(checkhash):
                 passnotcorrect = False
                 os.system('cls||clear')
-            #if bcrypt.checkpw(password, checkhash):
-            #    passnotcorrect = False
-            #    os.system('cls||clear')
+                file = open('logs/actions.log', 'a')
+                actionmsg = (str("Login: Success") + str('\n'))
+                file.write(actionmsg)
+                file.close()
             else:
+                file = open('logs/actions.log', 'a')
+                actionmsg = (str("Login: Incorrect password") + str('\n'))
+                file.write(actionmsg)
+                file.close()
                 print("Password is incorrect \n")
 
     else:
@@ -619,7 +761,11 @@ try:
         print("Looks like a file was left open, closing it now")
         closecmd()
     print("\n")
-except:
+except Exception as e:
+    file = open('logs/error.log', 'a')
+    errormsg = (str(e) + str('\n'))
+    file.write(errormsg)
+    file.close()
     print("\n")
 print("Enter help for full list of commands \nRemember to close the last file before exiting \nPlease only exit using the command exit")
 while True:
