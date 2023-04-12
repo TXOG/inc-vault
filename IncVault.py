@@ -149,7 +149,7 @@ def removecmd():
 
 
 def helpcmd():
-    print("Here's a list of all commands that are avaliable at the moment: \n \nadd: Adds a file to the system \nclose: Closes the last file opened (don't forget to do this before exiting) \nexit: Exits the program \nhelp: Shows this message :) \nlist: Lists all the files in your locker \nopen: Opens a file selected from a gui \npurge: Deletes all files in your locker \nremove: Deletes a file selected from a gui \nrename: Renames selected file")
+    print("Here's a list of all commands that are avaliable at the moment: \n \nadd: Adds a file to the system \nclose: Closes the last file opened (don't forget to do this before exiting) \ndelaccount: Purge locker and reset application \nexit: Exits the program \nhelp: Shows this message :) \nlist: Lists all the files in your locker \nopen: Opens a file selected from a gui \npurge: Deletes all files in your locker \nremove: Deletes a file selected from a gui \nrename: Renames selected file")
     file = open('logs/actions.log', 'a')
     actionmsg = (str("Help: Success") + str('\n'))
     file.write(actionmsg)
@@ -614,9 +614,21 @@ def addcmd():
     print("File added successfully")
 
 
-def purgecmd():
-    rusure = input("Are you sure you want to purge your locker(y/n): ")
-    rusure = rusure.lower()
+def deleteaccountcmd():
+    rusure = input("Are you sure you want to delete your account? This will also purge your locker(y/n): ")
+    if rusure == ("y"):
+        purgecmd(rusure=str("y"))
+        delextensions = [".ivd", ".ivp"]
+        for file_path in glob.glob(os.path.join(initialdir, "*")):
+            if os.path.splitext(file_path)[1] in delextensions:
+                os.remove(file_path)
+        print("Account successfully deleted, closing in 10 seconds")
+        time.sleep(10)
+        exit()
+    else:
+        print("Cancelled")
+
+def purgecmd(rusure):
     if rusure == ("y"):
         for filename in os.listdir(lockerdir):
             file_path = os.path.join(lockerdir, filename)
@@ -796,10 +808,15 @@ while True:
         listcmd()
     if commandinput == ("purge"):
         vcommand = True
-        purgecmd()
+        rusure = input("Are you sure you want to purge your locker(y/n): ")
+        rusure = rusure.lower()
+        purgecmd(rusure=rusure)
     if commandinput == ("rename"):
         vcommand = True
         renamecmd()
+    if commandinput == ("delaccount"):
+        vcommand = True
+        deleteaccountcmd()
     if vcommand == False:
         print("Oops that's not a command \nUse help for a full list of commands")
     else:
