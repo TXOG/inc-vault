@@ -99,7 +99,7 @@ def removecmd():
 
 
 def helpcmd():
-    print("Here's a list of all commands that are avaliable at the moment: \n \nadd: Adds a file to the system \nclose: Closes the last file opened (don't forget to do this before exiting) \nexit: Exits the program \nhelp: Shows this message :) \nlist: Lists all the files in your locker \nopen: Opens a file selected from a gui \npurge: Deletes all files in your locker \nremove: Deletes a file selected from a gui")
+    print("Here's a list of all commands that are avaliable at the moment: \n \nadd: Adds a file to the system \nclose: Closes the last file opened (don't forget to do this before exiting) \nexit: Exits the program \nhelp: Shows this message :) \nlist: Lists all the files in your locker \nopen: Opens a file selected from a gui \npurge: Deletes all files in your locker \nremove: Deletes a file selected from a gui \nrename: Renames selected file")
 
 
 def finishedprocess():
@@ -523,8 +523,36 @@ def purgecmd():
         file = open('openfile.ivd', 'w+')
         file.write("NONE")
         file.close()
+        print("Purge completed successfully")
     else:
         print("Cancelled")
+
+def renamecmd():
+    filepath = filedialog.askopenfilename(initialdir="./locker",
+                                          title="Select a File",
+                                          filetypes=(("all files",
+                                                      "*.*"),
+                                                     ("all files",
+                                                      "*.*")))
+    newname = input("What do you want to rename this file to: ")
+    try:
+        # find file extension
+        file_extension = pathlib.Path(filepath).suffix
+        renamepath = str(lockerdir) + str("/") + str(newname) + str(file_extension)
+        os.rename(filepath, renamepath)
+        filename = pathlib.Path(filepath).stem
+        namefile = (str(filename) + str(".ive"))
+        renamepath = str(initialdir) + str("/") + str(newname) + str(".ive")
+        os.rename(namefile, renamepath)
+        namefile = (str(filename) + str(".ivd"))
+        renamepath = str(initialdir) + str("/") + str(newname) + str(".ivd")
+        os.rename(namefile, renamepath)
+        namefile = (str(filename) + str(".ivs"))
+        renamepath = str(initialdir) + str("/") + str(newname) + str(".ivs")
+        os.rename(namefile, renamepath)
+        print("Successfully renamed file")
+    except Exception as e:
+        print("Failed to rename file")
 
 
 def setup():
@@ -533,7 +561,6 @@ def setup():
     password = input("Enter password: ")
     password = password.encode('utf-8')
     hashed = hashlib.sha512(password).digest()
-    #hashed = bcrypt.hashpw(password, bcrypt.gensalt())
     file = open('password.ivp', 'w+')
     writehashed = str(hashed)
     file.write(writehashed)
@@ -624,6 +651,9 @@ while True:
     if commandinput == ("purge"):
         vcommand = True
         purgecmd()
+    if commandinput == ("rename"):
+        vcommand = True
+        renamecmd()
     if vcommand == False:
         print("Oops that's not a command \nUse help for a full list of commands")
     else:
