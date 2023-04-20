@@ -5,26 +5,20 @@ An encrypted vault to help hide and protect files. If you find any bugs please r
 * Do **NOT** delete any files created by the program
 * Create an exception for the entire directory if an antivirus starts causing issues
 
-## Install
-### Gitclone
-- Gitclone the repo
-- Make sure python is installed
-- Make sure all modules are installed
-  - On windows they are installed by running the program
-  - Linux/Mac
-    - pip install bcrypt
-    - pip install hashlib
-    - pip install pathlib
-    - pip install cryptography
+## Commands
 
-#### Run
-Run the IncVault.py file
-### Exe download
-- Download the latest release from the releases tab
-- Extraxt the .zip file
+Currently there are 10 commands. Type these commands into the interface to use them:
+- add
+- close
+- delaccount
+- exit
+- help
+- list
+- open
+- purge
+- remove
+- rename
 
-#### Run
-* Run IncVault.exe
 
 ## Credits
 Developer - Thomas Kerby
