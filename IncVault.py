@@ -12,6 +12,7 @@ try:
     import atexit
     import time
     import glob
+    import hmac
 except Exception as e:
     file = open('logs/error.log', 'a')
     errormsg = (str(e) + str('\n'))
@@ -34,20 +35,20 @@ def listcmd():
     print(os.listdir(lockerdir))
 
 
-
 def exit_handler():
     print("Exiting")
     file = open('openfile.ivd', 'r+')
     canexit = file.read()
     file.close()
-    if canexit != ("NONE"):
+    if not hmac.compare_digest(canexit, "NONE"):
         filename = pathlib.Path(canexit).stem
         namefile = (str(filename) + str('.ivd'))
         file = open(namefile, 'r+')
         type = file.read()
         file.close()
-        if type == ("sp"):
-            print("A file can't be closed as it has a second password, please reopen the application and close this file")
+        if hmac.compare_digest(type, "sp"):
+            print(
+                "A file can't be closed as it has a second password, please reopen the application and close this file")
             print("Closing in 10 seconds")
             time.sleep(10)
         else:
@@ -76,10 +77,10 @@ if not os.path.exists('logs/error.log'):
     file.close()
 
 if os.path.getsize('logs/error.log') > 1000000:
-        file = open('logs/error.log', 'w+')
-        file.seek(0)
-        file.truncate(0)
-        file.close()
+    file = open('logs/error.log', 'w+')
+    file.seek(0)
+    file.truncate(0)
+    file.close()
 
 
 def removecmd():
@@ -93,7 +94,7 @@ def removecmd():
                                                       "*.*")))
     rusure = input("Are you sure you want to remove this file(y/n): ")
     rusure = rusure.lower()
-    if rusure == ("y"):
+    if hmac.compare_digest(rusure, "y"):
         try:
             filename = pathlib.Path(filepath).stem
             couldntremove = (filename)
@@ -121,7 +122,9 @@ def removecmd():
 
 
 def helpcmd():
-    print("Here's a list of all commands that are avaliable at the moment: \n \nadd: Adds a file to the system \nclose: Closes the last file opened (don't forget to do this before exiting) \ndelaccount: Purge locker and reset application \nexit: Exits the program \nhelp: Shows this message :) \nlist: Lists all the files in your locker \nopen: Opens a file selected from a gui \npurge: Deletes all files in your locker \nremove: Deletes a file selected from a gui \nrename: Renames selected file")
+    print(
+        "Here's a list of all commands that are avaliable at the moment: \n \nadd: Adds a file to the system \nclose: Closes the last file opened (don't forget to do this before exiting) \ndelaccount: Purge locker and reset application \nexit: Exits the program \nhelp: Shows this message :) \nlist: Lists all the files in your locker \nopen: Opens a file selected from a gui \npurge: Deletes all files in your locker \nremove: Deletes a file selected from a gui \nrename: Renames selected file")
+
 
 def finishedprocess():
     print("The process was terminated due to an error")
@@ -143,7 +146,7 @@ def closecmd():
         mostrecentpath = file.read().strip()
         file.close()
 
-        if mostrecentpath == ("NONE"):
+        if hmac.compare_digest(mostrecentpath, "NONE"):
             print("All files are closed")
             finishedprocess()
         else:
@@ -163,44 +166,44 @@ def closecmd():
             salt = file.read()
             file.close()
 
-            if data == ("sp"):
-                #gets the user to input their password
+            if hmac.compare_digest(data, "sp"):
+                # gets the user to input their password
                 custompass = input(
                     "Enter password for this file (This passoword can be different to the one set previously): ")
-                #adds password and salt together - then encodes
+                # adds password and salt together - then encodes
                 passnsalt = (str(custompass) + str(salt))
                 passnsalt = passnsalt.encode('utf-8')
-                #hashes the password and salt to use as a key
+                # hashes the password and salt to use as a key
                 hashed = hashlib.sha256(passnsalt).digest()
                 key = base64.urlsafe_b64encode(hashed)
-                #creates fernet so encryption can happen
+                # creates fernet so encryption can happen
                 fernet = Fernet(key)
-                #gets new file path
-                #gets the bytes data of a file and encrypts
+                # gets new file path
+                # gets the bytes data of a file and encrypts
                 os.chdir(lockerdir)
                 with open(fullfilename, "rb") as file:
                     file_data = file.read()
                     encrypted_data = fernet.encrypt(file_data)
                     file.close()
-                #writes to the binary of a file
+                # writes to the binary of a file
                 with open(fullfilename, "wb") as file:
                     file.write(encrypted_data)
                     file.close()
                 os.chdir(initialdir)
                 originalpassnsalt = (str(password) + str(salt))
                 originalpassnsalt = originalpassnsalt.encode('utf-8')
-                #hashes the password and salt to use as a key
+                # hashes the password and salt to use as a key
                 hashed = hashlib.sha256(originalpassnsalt).digest()
                 key = base64.urlsafe_b64encode(hashed)
-                #creates fernet so encryption can happen
+                # creates fernet so encryption can happen
                 fernet = Fernet(key)
-                #gets the bytes data of a file and encrypts
+                # gets the bytes data of a file and encrypts
                 os.chdir(lockerdir)
                 with open(fullfilename, "rb") as file:
                     file_data = file.read()
                     encrypted_data = fernet.encrypt(file_data)
                     file.close()
-                #writes to the binary of a file
+                # writes to the binary of a file
                 with open(fullfilename, "wb") as file:
                     file.write(encrypted_data)
                     file.close()
@@ -210,18 +213,18 @@ def closecmd():
             else:
                 originalpassnsalt = (str(password) + str(salt))
                 originalpassnsalt = originalpassnsalt.encode('utf-8')
-                #hashes the password and salt to use as a key
+                # hashes the password and salt to use as a key
                 hashed = hashlib.sha256(originalpassnsalt).digest()
                 key = base64.urlsafe_b64encode(hashed)
-                #creates fernet so encryption can happen
+                # creates fernet so encryption can happen
                 fernet = Fernet(key)
-                #gets the bytes data of a file and encrypts
+                # gets the bytes data of a file and encrypts
                 os.chdir(lockerdir)
                 with open(fullfilename, "rb") as file:
                     file_data = file.read()
                     encrypted_data = fernet.encrypt(file_data)
                     file.close()
-                #writes to the binary of a file
+                # writes to the binary of a file
                 with open(fullfilename, "wb") as file:
                     file.write(encrypted_data)
                     file.close()
@@ -259,7 +262,7 @@ def opencmd():
     mostrecentpath = file.read().strip()
     file.close()
 
-    if mostrecentpath != ("NONE"):
+    if not hmac.compare_digest(mostrecentpath, "NONE"):
         print("Please close the last file you opened with the command: close")
         finishedprocess()
     else:
@@ -270,7 +273,7 @@ def opencmd():
                                                           "*.*"),
                                                          ("all files",
                                                           "*.*")))
-        #find filename without extension
+        # find filename without extension
         filename = pathlib.Path(filepath).stem
 
         fullfilename = os.path.basename(filepath)
@@ -298,15 +301,15 @@ def opencmd():
             finishedprocess()
             return
 
-        #Seeing if there is a seperate password
-        if data == ("sp"):
+        # Seeing if there is a seperate password
+        if hmac.compare_digest(data, "sp"):
             shutil.copy(filepath, initialdir)
             backuppath = (str(initialdir) + str('/') + str(fullfilename))
             backupfullfilename = os.path.basename(backuppath)
             try:
-                #getting custom password
+                # getting custom password
                 custompass = input("Enter password: ")
-                #decrypting with orignial password first
+                # decrypting with orignial password first
                 passnsalt = (str(password) + str(salt))
                 passnsalt = passnsalt.encode('utf-8')
                 hash = hashlib.sha256(passnsalt).digest()
@@ -316,11 +319,11 @@ def opencmd():
                     file_data = file.read()
                     decrypted_data = fernet.decrypt(file_data)
                     file.close()
-                #writes to the binary of a file
+                # writes to the binary of a file
                 with open(filepath, "wb") as file:
                     file.write(decrypted_data)
                     file.close()
-                #decrypting with new differnet password
+                # decrypting with new differnet password
                 cpassnsalt = (str(custompass) + str(salt))
                 cpassnsalt = cpassnsalt.encode('utf-8')
                 hash = hashlib.sha256(cpassnsalt).digest()
@@ -330,16 +333,16 @@ def opencmd():
                     file_data = file.read()
                     decrypted_data = fernet.decrypt(file_data)
                     file.close()
-                #writes to the binary of a file
+                # writes to the binary of a file
                 with open(filepath, "wb") as file:
                     file.write(decrypted_data)
                     file.close()
-                #rename the file
+                # rename the file
                 revertfilename = (str(filename) + str(extension))
                 os.chdir(lockerdir)
                 os.rename(filepath, revertfilename)
                 os.chdir(initialdir)
-                #open in defualt application
+                # open in defualt application
                 path2open = (str(lockerdir) + str('/')
                              + str(filename) + str(extension))
                 os.remove(backupfullfilename)
@@ -360,7 +363,7 @@ def opencmd():
                 return
         else:
             try:
-                #decrypting with orignial password
+                # decrypting with orignial password
                 passnsalt = (str(password) + str(salt))
                 passnsalt = passnsalt.encode('utf-8')
                 hash = hashlib.sha256(passnsalt).digest()
@@ -370,7 +373,7 @@ def opencmd():
                     file_data = file.read()
                     decrypted_data = fernet.decrypt(file_data)
                     file.close()
-                #writes to the binary of a file
+                # writes to the binary of a file
                 with open(filepath, "wb") as file:
                     file.write(decrypted_data)
                     file.close()
@@ -378,7 +381,7 @@ def opencmd():
                 os.chdir(lockerdir)
                 os.rename(filepath, revertfilename)
                 os.chdir(initialdir)
-                #open in defualt application
+                # open in defualt application
                 path2open = (str(lockerdir) + str('/')
                              + str(filename) + str(extension))
                 os.startfile(path2open)
@@ -408,83 +411,83 @@ def addcmd():
         global salt
         global lockerdir
         global initialdir
-        #gui to choose files
+        # gui to choose files
         filepath = filedialog.askopenfilename(initialdir="C:/",
                                               title="Select a File",
                                               filetypes=(("all files",
                                                           "*.*"),
                                                          ("all files",
                                                           "*.*")))
-        #find file extension
+        # find file extension
         file_extension = pathlib.Path(filepath).suffix
-        #find filename without extension
+        # find filename without extension
         filename = pathlib.Path(filepath).stem
-        #find file name with extenion
+        # find file name with extenion
         fullfilename = os.path.basename(filepath)
-        #writes file extension to file
+        # writes file extension to file
         namefile = (str(filename) + str('.ive'))
         file = open(namefile, 'w+')
         file.write(file_extension)
         file.close()
-        #moves file to locker folder
+        # moves file to locker folder
         shutil.move(filepath, "./locker")
-        #allows user to choose if custom password for this specific file
+        # allows user to choose if custom password for this specific file
         newpass = input(
             "Do you want to have a seperate password for this file(y/n): ")
         newpass.lower()
-        if newpass == ("y"):
+        if hmac.compare_digest(newpass, "y"):
             invalidinput = False
-        elif newpass == ("n"):
+        elif hmac.compare_digest(newpass, "n"):
             invalidinput = False
         else:
             invalidinput = True
-        if newpass == ("y"):
-            #writes to a file that seperate password
+        if hmac.compare_digest(newpass, "y"):
+            # writes to a file that seperate password
             namefile = (str(filename) + str('.ivd'))
             file = open(namefile, 'w+')
             file.write("sp")
             file.close()
-            #generates a random salt
+            # generates a random salt
             salt = bcrypt.gensalt()
-            #gets the user to input their password
+            # gets the user to input their password
             custompass = input("Enter password for this file: ")
-            #adds password and salt together - then encodes
+            # adds password and salt together - then encodes
             passnsalt = (str(custompass) + str(salt))
             passnsalt = passnsalt.encode('utf-8')
-            #writes the salt to a file
+            # writes the salt to a file
             namefile = (str(filename) + str('.ivs'))
             file = open(namefile, 'w+')
             file.write(str(salt))
             file.close()
-            #hashes the password and salt to use as a key
+            # hashes the password and salt to use as a key
             hashed = hashlib.sha256(passnsalt).digest()
             key = base64.urlsafe_b64encode(hashed)
-            #creates fernet so encryption can happen
+            # creates fernet so encryption can happen
             fernet = Fernet(key)
-            #gets new file path
+            # gets new file path
             filepath = (str('./locker/') + str(filename) + str(file_extension))
-            #gets the bytes data of a file and encrypts
+            # gets the bytes data of a file and encrypts
             with open(filepath, "rb") as file:
                 file_data = file.read()
                 encrypted_data = fernet.encrypt(file_data)
                 file.close()
-            #writes to the binary of a file
+            # writes to the binary of a file
             with open(filepath, "wb") as file:
                 file.write(encrypted_data)
                 file.close()
             originalpassnsalt = (str(password) + str(salt))
             originalpassnsalt = originalpassnsalt.encode('utf-8')
-            #hashes the password and salt to use as a key
+            # hashes the password and salt to use as a key
             hashed = hashlib.sha256(originalpassnsalt).digest()
             key = base64.urlsafe_b64encode(hashed)
-            #creates fernet so encryption can happen
+            # creates fernet so encryption can happen
             fernet = Fernet(key)
-            #gets the bytes data of a file and encrypts
+            # gets the bytes data of a file and encrypts
             with open(filepath, "rb") as file:
                 file_data = file.read()
                 encrypted_data = fernet.encrypt(file_data)
                 file.close()
-            #writes to the binary of a file
+            # writes to the binary of a file
             with open(filepath, "wb") as file:
                 file.write(encrypted_data)
                 file.close()
@@ -493,37 +496,37 @@ def addcmd():
             os.rename(fullfilename, newfilename)
             os.chdir(initialdir)
         else:
-            if invalidinput == True:
+            if hmac.compare_digest(invalidinput, True):
                 print("Invalid input - using default password")
             else:
                 print("Using default password")
-            #writes to a file that same password
+            # writes to a file that same password
             namefile = (str(filename) + str('.ivd'))
             file = open(namefile, 'w+')
             file.write("nsp")
             file.close()
-            #generates a random salt
+            # generates a random salt
             salt = bcrypt.gensalt()
-            #writes the salt to a file
+            # writes the salt to a file
             namefile = (str(filename) + str('.ivs'))
             file = open(namefile, 'w+')
             file.write(str(salt))
             file.close()
-            #gets new file path
+            # gets new file path
             filepath = (str('./locker/') + str(filename) + str(file_extension))
             originalpassnsalt = (str(password) + str(salt))
             originalpassnsalt = originalpassnsalt.encode('utf-8')
-            #hashes the password and salt to use as a key
+            # hashes the password and salt to use as a key
             hashed = hashlib.sha256(originalpassnsalt).digest()
             key = base64.urlsafe_b64encode(hashed)
-            #creates fernet so encryption can happen
+            # creates fernet so encryption can happen
             fernet = Fernet(key)
-            #gets the bytes data of a file and encrypts
+            # gets the bytes data of a file and encrypts
             with open(filepath, "rb") as file:
                 file_data = file.read()
                 encrypted_data = fernet.encrypt(file_data)
                 file.close()
-            #writes to the binary of a file
+            # writes to the binary of a file
             with open(filepath, "wb") as file:
                 file.write(encrypted_data)
                 file.close()
@@ -544,7 +547,7 @@ def addcmd():
 
 def deleteaccountcmd():
     rusure = input("Are you sure you want to delete your account? This will also purge your locker(y/n): ")
-    if rusure == ("y"):
+    if hmac.compare_digest(rusure, "y"):
         purgecmd(rusure=str("y"))
         delextensions = [".ivd", ".ivp"]
         for file_path in glob.glob(os.path.join(initialdir, "*")):
@@ -556,8 +559,9 @@ def deleteaccountcmd():
     else:
         print("Cancelled")
 
+
 def purgecmd(rusure):
-    if rusure == ("y"):
+    if hmac.compare_digest(rusure, "y"):
         for filename in os.listdir(lockerdir):
             file_path = os.path.join(lockerdir, filename)
             try:
@@ -584,6 +588,7 @@ def purgecmd(rusure):
         print("Purge completed successfully")
     else:
         print("Cancelled")
+
 
 def renamecmd():
     filepath = filedialog.askopenfilename(initialdir="./locker",
@@ -643,14 +648,14 @@ def check_setup():
     if exists('setupdone.ivd'):
         global passnotcorrect
         passnotcorrect = True
-        while passnotcorrect == True:
+        while hmac.compare_digest(passnotcorrect, True):
             password = input("Enter password: ")
             password = password.encode('utf-8')
             file = open('password.ivp', 'r')
             checkhash = file.read()
             file.close()
             passwordcheck = hashlib.sha512(password).digest()
-            if str(passwordcheck) == str(checkhash):
+            if hmac.compare_digest(str(passwordcheck), str(checkhash))
                 passnotcorrect = False
                 os.system('cls||clear')
             else:
@@ -673,7 +678,7 @@ try:
     file = open('openfile.ivd', 'r+')
     fileopen = file.read()
     file.close()
-    if fileopen != ("NONE"):
+    if not hmac.compare_digest(fileopen, "NONE"):
         print("Looks like a file was left open, closing it now")
         closecmd()
     print("\n")
@@ -683,45 +688,37 @@ except Exception as e:
     file.write(errormsg)
     file.close()
     print("\n")
-print("Enter help for full list of commands \nRemember to close the last file before exiting \nPlease only exit using the command exit")
+print(
+    "Enter help for full list of commands \nRemember to close the last file before exiting \nPlease only exit using the"
+    " command exit")
+
+
+def process_command(commandinput):
+    commands = {
+        "exit": exitcmd,
+        "add": addcmd,
+        "open": opencmd,
+        "close": closecmd,
+        "help": helpcmd,
+        "remove": removecmd,
+        "list": listcmd,
+        "purge": purgecmd,
+        "rename": renamecmd,
+        "delaccount": deleteaccountcmd,
+    }
+
+    for command, function in commands.items():
+        if hmac.compare_digest(command, commandinput):
+            function()
+            return True
+
+    return False
+
+
 while True:
-    vcommand = False
-    commandinput = input(">> ")
-    commandinput = str(commandinput)
-    commandinput.lower()
-    if commandinput == ("exit"):
-        vcommand = True
+    commandinput = input(">> ").lower()
+    if hmac.compare_digest(commandinput, "exit"):
         exitcmd()
-    if commandinput == ("add"):
-        vcommand = True
-        addcmd()
-    if commandinput == ("open"):
-        vcommand = True
-        opencmd()
-    if commandinput == ("close"):
-        vcommand = True
-        closecmd()
-    if commandinput == ("help"):
-        vcommand = True
-        helpcmd()
-    if commandinput == ("remove"):
-        vcommand = True
-        removecmd()
-    if commandinput == ("list"):
-        vcommand = True
-        listcmd()
-    if commandinput == ("purge"):
-        vcommand = True
-        rusure = input("Are you sure you want to purge your locker(y/n): ")
-        rusure = rusure.lower()
-        purgecmd(rusure=rusure)
-    if commandinput == ("rename"):
-        vcommand = True
-        renamecmd()
-    if commandinput == ("delaccount"):
-        vcommand = True
-        deleteaccountcmd()
-    if vcommand == False:
+        break
+    elif not process_command(commandinput):
         print("Oops that's not a command \nUse help for a full list of commands")
-    else:
-        vcommand = False
