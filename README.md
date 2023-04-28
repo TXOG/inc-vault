@@ -23,6 +23,13 @@ Currently there are 10 commands. Type these commands into the interface to use t
 - remove
 - rename
 
+## Requirements
+
+- Python
+- Microsoft C++ Build Tools
+  - [Offical Website](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
+  - [Automatic Install](https://aka.ms/vs/17/release/vs_BuildTools.exe)
+
 
 
 ## Credits
