@@ -420,6 +420,8 @@ def addcmd():
                                                           "*.*"),
                                                          ("all files",
                                                           "*.*")))
+        if not filepath:
+            return
         # find file extension
         file_extension = pathlib.Path(filepath).suffix
         # find filename without extension
