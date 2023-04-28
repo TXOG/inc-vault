@@ -496,7 +496,7 @@ def addcmd():
             os.rename(fullfilename, newfilename)
             os.chdir(initialdir)
         else:
-            if hmac.compare_digest(invalidinput, True):
+            if invalidinput:
                 print("Invalid input - using default password")
             else:
                 print("Using default password")
@@ -648,14 +648,14 @@ def check_setup():
     if exists('setupdone.ivd'):
         global passnotcorrect
         passnotcorrect = True
-        while hmac.compare_digest(passnotcorrect, True):
+        while passnotcorrect:
             password = input("Enter password: ")
             password = password.encode('utf-8')
             file = open('password.ivp', 'r')
             checkhash = file.read()
             file.close()
             passwordcheck = hashlib.sha512(password).digest()
-            if hmac.compare_digest(str(passwordcheck), str(checkhash))
+            if hmac.compare_digest(str(passwordcheck), str(checkhash)):
                 passnotcorrect = False
                 os.system('cls||clear')
             else:
