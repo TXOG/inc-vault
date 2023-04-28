@@ -5,8 +5,6 @@ echo "installing bcrypt"
 pip install bcrypt
 echo "installing pathlib"
 pip install pathlib
-echo "installing hashlib"
-pip install hashlib
 echo "installing cryptography"
 pip install cryptography
 echo "installing pywin"
@@ -15,5 +13,7 @@ echo "installing psutil"
 pip install psutil
 echo "installing argon2"
 pip install pyargon2
+echo "installing pymonocypher"
+pip install pymonocypher
 echo "If you have anymore issues then create an issue on the github"
 echo "The program will continue in 5 seconds"
