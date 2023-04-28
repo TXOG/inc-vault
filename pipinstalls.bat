@@ -1,15 +1,19 @@
 @ECHO OFF
-echo installing bcrypt
+echo "updating pip"
+python -m pip install --upgrade pip
+echo "installing bcrypt"
 pip install bcrypt
-echo installing pathlib
+echo "installing pathlib"
 pip install pathlib
-echo installing hashlib
+echo "installing hashlib"
 pip install hashlib
-echo installing cryptography
+echo "installing cryptography"
 pip install cryptography
-echo installing pywin
+echo "installing pywin"
 pip install pywin32
-echo installing psutil
+echo "installing psutil"
 pip install psutil
-echo If you have anymore issues then create an issue on the github
-echo The program will continue in 5 seconds
+echo "installing argon2"
+pip install pyargon2
+echo "If you have anymore issues then create an issue on the github"
+echo "The program will continue in 5 seconds"

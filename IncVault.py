@@ -13,6 +13,7 @@ try:
     import time
     import glob
     import hmac
+    from pyargon2 import hash
 except Exception as e:
     file = open('logs/error.log', 'a')
     errormsg = (str(e) + str('\n'))
@@ -81,6 +82,13 @@ if os.path.getsize('logs/error.log') > 1000000:
     file.seek(0)
     file.truncate(0)
     file.close()
+
+
+def hashfile(to_hash):
+    argonhash = str(hash(to_hash, "123456789123456789"))
+    argonhash = argonhash.encode('utf-8')
+    return hashlib.sha256(argonhash).digest()
+
 
 
 def removecmd():
@@ -169,12 +177,11 @@ def closecmd():
             if hmac.compare_digest(data, "sp"):
                 # gets the user to input their password
                 custompass = input(
-                    "Enter password for this file (This passoword can be different to the one set previously): ")
+                    "Enter password for this file (This password can be different to the one set previously): ")
                 # adds password and salt together - then encodes
                 passnsalt = (str(custompass) + str(salt))
-                passnsalt = passnsalt.encode('utf-8')
                 # hashes the password and salt to use as a key
-                hashed = hashlib.sha256(passnsalt).digest()
+                hashed = hashfile(to_hash=passnsalt)
                 key = base64.urlsafe_b64encode(hashed)
                 # creates fernet so encryption can happen
                 fernet = Fernet(key)
@@ -191,9 +198,8 @@ def closecmd():
                     file.close()
                 os.chdir(initialdir)
                 originalpassnsalt = (str(password) + str(salt))
-                originalpassnsalt = originalpassnsalt.encode('utf-8')
                 # hashes the password and salt to use as a key
-                hashed = hashlib.sha256(originalpassnsalt).digest()
+                hashed = hashfile(to_hash=originalpassnsalt)
                 key = base64.urlsafe_b64encode(hashed)
                 # creates fernet so encryption can happen
                 fernet = Fernet(key)
@@ -212,9 +218,8 @@ def closecmd():
                 os.chdir(initialdir)
             else:
                 originalpassnsalt = (str(password) + str(salt))
-                originalpassnsalt = originalpassnsalt.encode('utf-8')
                 # hashes the password and salt to use as a key
-                hashed = hashlib.sha256(originalpassnsalt).digest()
+                hashed = hashfile(to_hash=originalpassnsalt)
                 key = base64.urlsafe_b64encode(hashed)
                 # creates fernet so encryption can happen
                 fernet = Fernet(key)
@@ -311,8 +316,7 @@ def opencmd():
                 custompass = input("Enter password: ")
                 # decrypting with orignial password first
                 passnsalt = (str(password) + str(salt))
-                passnsalt = passnsalt.encode('utf-8')
-                hash = hashlib.sha256(passnsalt).digest()
+                hash = hashfile(to_hash=passnsalt)
                 key = base64.urlsafe_b64encode(hash)
                 fernet = Fernet(key)
                 with open(filepath, "rb") as file:
@@ -325,8 +329,7 @@ def opencmd():
                     file.close()
                 # decrypting with new differnet password
                 cpassnsalt = (str(custompass) + str(salt))
-                cpassnsalt = cpassnsalt.encode('utf-8')
-                hash = hashlib.sha256(cpassnsalt).digest()
+                hash = hashfile(to_hash=cpassnsalt)
                 key = base64.urlsafe_b64encode(hash)
                 fernet = Fernet(key)
                 with open(filepath, "rb") as file:
@@ -365,8 +368,7 @@ def opencmd():
             try:
                 # decrypting with orignial password
                 passnsalt = (str(password) + str(salt))
-                passnsalt = passnsalt.encode('utf-8')
-                hash = hashlib.sha256(passnsalt).digest()
+                hash = hashfile(to_hash=passnsalt)
                 key = base64.urlsafe_b64encode(hash)
                 fernet = Fernet(key)
                 with open(filepath, "rb") as file:
@@ -453,14 +455,13 @@ def addcmd():
             custompass = input("Enter password for this file: ")
             # adds password and salt together - then encodes
             passnsalt = (str(custompass) + str(salt))
-            passnsalt = passnsalt.encode('utf-8')
             # writes the salt to a file
             namefile = (str(filename) + str('.ivs'))
             file = open(namefile, 'w+')
             file.write(str(salt))
             file.close()
             # hashes the password and salt to use as a key
-            hashed = hashlib.sha256(passnsalt).digest()
+            hashed = hashfile(to_hash=passnsalt)
             key = base64.urlsafe_b64encode(hashed)
             # creates fernet so encryption can happen
             fernet = Fernet(key)
@@ -476,9 +477,8 @@ def addcmd():
                 file.write(encrypted_data)
                 file.close()
             originalpassnsalt = (str(password) + str(salt))
-            originalpassnsalt = originalpassnsalt.encode('utf-8')
             # hashes the password and salt to use as a key
-            hashed = hashlib.sha256(originalpassnsalt).digest()
+            hashed = hashfile(to_hash=originalpassnsalt)
             key = base64.urlsafe_b64encode(hashed)
             # creates fernet so encryption can happen
             fernet = Fernet(key)
@@ -515,9 +515,8 @@ def addcmd():
             # gets new file path
             filepath = (str('./locker/') + str(filename) + str(file_extension))
             originalpassnsalt = (str(password) + str(salt))
-            originalpassnsalt = originalpassnsalt.encode('utf-8')
             # hashes the password and salt to use as a key
-            hashed = hashlib.sha256(originalpassnsalt).digest()
+            hashed = hashfile(to_hash=originalpassnsalt)
             key = base64.urlsafe_b64encode(hashed)
             # creates fernet so encryption can happen
             fernet = Fernet(key)
@@ -626,8 +625,8 @@ def setup():
     global password
     print("Doing first time setup")
     password = input("Enter password: ")
-    password = password.encode('utf-8')
-    hashed = hashlib.sha512(password).digest()
+    # password = password.encode('utf-8')
+    hashed = hashfile(to_hash=password)
     file = open('password.ivp', 'w+')
     writehashed = str(hashed)
     file.write(writehashed)
@@ -650,11 +649,11 @@ def check_setup():
         passnotcorrect = True
         while passnotcorrect:
             password = input("Enter password: ")
-            password = password.encode('utf-8')
+            # password = password.encode('utf-8')
             file = open('password.ivp', 'r')
             checkhash = file.read()
             file.close()
-            passwordcheck = hashlib.sha512(password).digest()
+            passwordcheck = hashfile(to_hash=password)
             if hmac.compare_digest(str(passwordcheck), str(checkhash)):
                 passnotcorrect = False
                 os.system('cls||clear')
@@ -695,14 +694,12 @@ print(
 
 def process_command(commandinput):
     commands = {
-        "exit": exitcmd,
         "add": addcmd,
         "open": opencmd,
         "close": closecmd,
         "help": helpcmd,
         "remove": removecmd,
         "list": listcmd,
-        "purge": purgecmd,
         "rename": renamecmd,
         "delaccount": deleteaccountcmd,
     }
@@ -720,5 +717,8 @@ while True:
     if hmac.compare_digest(commandinput, "exit"):
         exitcmd()
         break
+    elif hmac.compare_digest(commandinput, "purge"):
+        rusure = input("Are you sure you want to purge your locker(y/n) ")
+        purgecmd(rusure=rusure)
     elif not process_command(commandinput):
         print("Oops that's not a command \nUse help for a full list of commands")
