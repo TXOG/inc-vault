@@ -27,6 +27,8 @@ Hashing is a one-way function that takes an input data and generates a fixed-siz
 
 Please note that you should only interact with files stored in your locker through IncVault, unless you are editing the file contents. If an Antivirus causes any issues, you may have to [create an exception](https://www.google.com/search?q=how+to+create+an+exception+in+%5Bantivirus%5D&sxsrf=APwXEdck3w8dJJN2pkH660RpQNwrCi0nNQ%3A1682017158274&source=hp&ei=hotBZIDyDJOR8gLKsYOQCw&iflsig=AOEireoAAAAAZEGZltTE6sDECenhHxi9NiJeOVL1udK-&ved=0ahUKEwiAzeKZkrn-AhWTiFwKHcrYALIQ4dUDCAo&uact=5&oq=how+to+create+an+exception+in+%5Bantivirus%5D&gs_lcp=Cgdnd3Mtd2l6EAMyBggAEBYQHjIGCAAQFhAeMgYIABAWEB4yBggAEBYQHjIICAAQigUQhgM6BwgjEOoCECdQ1ARY1ARg6ghoAXAAeACAAW2IAW2SAQMwLjGYAQCgAQKgAQGwAQo&sclient=gws-wiz).
 
+If you find any bugs or potential vulnerabilities please create an [issue](https://github.com/TXOG/inc-vault/issues) in this repo
+
 
 
 
