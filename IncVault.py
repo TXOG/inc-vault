@@ -14,6 +14,7 @@ try:
     import glob
     import hmac
     from pyargon2 import hash
+    import getpass
 except Exception as e:
     file = open('logs/error.log', 'a')
     errormsg = (str(e) + str('\n'))
@@ -176,8 +177,7 @@ def closecmd():
 
             if hmac.compare_digest(data, "sp"):
                 # gets the user to input their password
-                custompass = input(
-                    "Enter password for this file (This password can be different to the one set previously): ")
+                custompass = getpass.getpass(prompt='Enter password a new password for this file: ')
                 # adds password and salt together - then encodes
                 passnsalt = (str(custompass) + str(salt))
                 # hashes the password and salt to use as a key
@@ -313,7 +313,7 @@ def opencmd():
             backupfullfilename = os.path.basename(backuppath)
             try:
                 # getting custom password
-                custompass = input("Enter password: ")
+                custompass = getpass.getpass(prompt='Enter password: ')
                 # decrypting with orignial password first
                 passnsalt = (str(password) + str(salt))
                 hash = hashfile(to_hash=passnsalt)
@@ -454,7 +454,7 @@ def addcmd():
             # generates a random salt
             salt = bcrypt.gensalt()
             # gets the user to input their password
-            custompass = input("Enter password for this file: ")
+            custompass = getpass.getpass(prompt='Enter password for this file: ')
             # adds password and salt together - then encodes
             passnsalt = (str(custompass) + str(salt))
             # writes the salt to a file
@@ -626,8 +626,7 @@ def renamecmd():
 def setup():
     global password
     print("Doing first time setup")
-    password = input("Enter password: ")
-    # password = password.encode('utf-8')
+    password = getpass.getpass(prompt='Enter password: ')
     hashed = hashfile(to_hash=password)
     file = open('password.ivp', 'w+')
     writehashed = str(hashed)
@@ -650,8 +649,7 @@ def check_setup():
         global passnotcorrect
         passnotcorrect = True
         while passnotcorrect:
-            password = input("Enter password: ")
-            # password = password.encode('utf-8')
+            password = getpass.getpass(prompt='Enter password: ')
             file = open('password.ivp', 'r')
             checkhash = file.read()
             file.close()
