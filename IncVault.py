@@ -91,7 +91,6 @@ def hashfile(to_hash):
     return hashlib.sha256(argonhash).digest()
 
 
-
 def removecmd():
     closecmd()
     couldntremove = ("NONE")
