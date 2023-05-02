@@ -13,7 +13,5 @@ echo "installing psutil"
 pip install psutil
 echo "installing argon2"
 pip install pyargon2
-echo "installing pymonocypher"
-pip install pymonocypher
 echo "If you have anymore issues then create an issue on the github"
 echo "The program will continue in 5 seconds"
