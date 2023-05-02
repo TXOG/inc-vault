@@ -90,6 +90,14 @@ def hashfile(to_hash):
     argonhash = argonhash.encode('utf-8')
     return hashlib.sha256(argonhash).digest()
 
+def encryptfile(key, file_data):
+    fernet = Fernet(key)
+    return fernet.encrypt(file_data)
+
+def decryptfile(key, file_data):
+    fernet = Fernet(key)
+    return fernet.decrypt(file_data)
+
 
 def removecmd():
     closecmd()
@@ -183,13 +191,12 @@ def closecmd():
                 hashed = hashfile(to_hash=passnsalt)
                 key = base64.urlsafe_b64encode(hashed)
                 # creates fernet so encryption can happen
-                fernet = Fernet(key)
                 # gets new file path
                 # gets the bytes data of a file and encrypts
                 os.chdir(lockerdir)
                 with open(fullfilename, "rb") as file:
                     file_data = file.read()
-                    encrypted_data = fernet.encrypt(file_data)
+                    encrypted_data = encryptfile(key=key, file_data=file_data)
                     file.close()
                 # writes to the binary of a file
                 with open(fullfilename, "wb") as file:
@@ -201,12 +208,11 @@ def closecmd():
                 hashed = hashfile(to_hash=originalpassnsalt)
                 key = base64.urlsafe_b64encode(hashed)
                 # creates fernet so encryption can happen
-                fernet = Fernet(key)
                 # gets the bytes data of a file and encrypts
                 os.chdir(lockerdir)
                 with open(fullfilename, "rb") as file:
                     file_data = file.read()
-                    encrypted_data = fernet.encrypt(file_data)
+                    encrypted_data = encryptfile(key=key, file_data=file_data)
                     file.close()
                 # writes to the binary of a file
                 with open(fullfilename, "wb") as file:
@@ -221,12 +227,11 @@ def closecmd():
                 hashed = hashfile(to_hash=originalpassnsalt)
                 key = base64.urlsafe_b64encode(hashed)
                 # creates fernet so encryption can happen
-                fernet = Fernet(key)
                 # gets the bytes data of a file and encrypts
                 os.chdir(lockerdir)
                 with open(fullfilename, "rb") as file:
                     file_data = file.read()
-                    encrypted_data = fernet.encrypt(file_data)
+                    encrypted_data = encryptfile(key=key, file_data=file_data)
                     file.close()
                 # writes to the binary of a file
                 with open(fullfilename, "wb") as file:
@@ -317,10 +322,9 @@ def opencmd():
                 passnsalt = (str(password) + str(salt))
                 hash = hashfile(to_hash=passnsalt)
                 key = base64.urlsafe_b64encode(hash)
-                fernet = Fernet(key)
                 with open(filepath, "rb") as file:
                     file_data = file.read()
-                    decrypted_data = fernet.decrypt(file_data)
+                    decrypted_data = decryptfile(key=key, file_data=file_data)
                     file.close()
                 # writes to the binary of a file
                 with open(filepath, "wb") as file:
@@ -330,10 +334,9 @@ def opencmd():
                 cpassnsalt = (str(custompass) + str(salt))
                 hash = hashfile(to_hash=cpassnsalt)
                 key = base64.urlsafe_b64encode(hash)
-                fernet = Fernet(key)
                 with open(filepath, "rb") as file:
                     file_data = file.read()
-                    decrypted_data = fernet.decrypt(file_data)
+                    decrypted_data = decryptfile(key=key, file_data=file_data)
                     file.close()
                 # writes to the binary of a file
                 with open(filepath, "wb") as file:
@@ -369,10 +372,9 @@ def opencmd():
                 passnsalt = (str(password) + str(salt))
                 hash = hashfile(to_hash=passnsalt)
                 key = base64.urlsafe_b64encode(hash)
-                fernet = Fernet(key)
                 with open(filepath, "rb") as file:
                     file_data = file.read()
-                    decrypted_data = fernet.decrypt(file_data)
+                    decrypted_data = decryptfile(key=key, file_data=file_data)
                     file.close()
                 # writes to the binary of a file
                 with open(filepath, "wb") as file:
@@ -464,14 +466,12 @@ def addcmd():
             # hashes the password and salt to use as a key
             hashed = hashfile(to_hash=passnsalt)
             key = base64.urlsafe_b64encode(hashed)
-            # creates fernet so encryption can happen
-            fernet = Fernet(key)
             # gets new file path
             filepath = (str('./locker/') + str(filename) + str(file_extension))
             # gets the bytes data of a file and encrypts
             with open(filepath, "rb") as file:
                 file_data = file.read()
-                encrypted_data = fernet.encrypt(file_data)
+                encrypted_data = encryptfile(key=key, file_data=file_data)
                 file.close()
             # writes to the binary of a file
             with open(filepath, "wb") as file:
@@ -481,12 +481,10 @@ def addcmd():
             # hashes the password and salt to use as a key
             hashed = hashfile(to_hash=originalpassnsalt)
             key = base64.urlsafe_b64encode(hashed)
-            # creates fernet so encryption can happen
-            fernet = Fernet(key)
             # gets the bytes data of a file and encrypts
             with open(filepath, "rb") as file:
                 file_data = file.read()
-                encrypted_data = fernet.encrypt(file_data)
+                encrypted_data = encryptfile(key=key, file_data=file_data)
                 file.close()
             # writes to the binary of a file
             with open(filepath, "wb") as file:
@@ -519,12 +517,10 @@ def addcmd():
             # hashes the password and salt to use as a key
             hashed = hashfile(to_hash=originalpassnsalt)
             key = base64.urlsafe_b64encode(hashed)
-            # creates fernet so encryption can happen
-            fernet = Fernet(key)
             # gets the bytes data of a file and encrypts
             with open(filepath, "rb") as file:
                 file_data = file.read()
-                encrypted_data = fernet.encrypt(file_data)
+                encrypted_data = encryptfile(key=key, file_data=file_data)
                 file.close()
             # writes to the binary of a file
             with open(filepath, "wb") as file:
@@ -625,7 +621,17 @@ def renamecmd():
 def setup():
     global password
     print("Doing first time setup")
-    password = getpass.getpass(prompt='Enter password: ')
+    policy = False
+    while policy == False:
+        password = getpass.getpass(prompt='Enter password: ')
+        if len(password) < 8:
+            print("Password too short (min 8 characters)")
+        elif not (any(char.isalpha() for char in password) and any(char.isdigit() for char in password) and any(
+                not char.isalnum() for char in password)):
+            print("Password must have at least 1 number and 1 symbol")
+        else:
+            policy = True
+
     hashed = hashfile(to_hash=password)
     file = open('password.ivp', 'w+')
     writehashed = str(hashed)
