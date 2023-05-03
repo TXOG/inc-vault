@@ -160,7 +160,7 @@ try:
     file.close()
     if not hmac.compare_digest(fileopen, "NONE"):
         print("Looks like a file was left open, closing it now")
-        closecmd()
+        closecmd(password=password, initialdir=initialdir, lockerdir=lockerdir)
     print("\n")
 except Exception as e:
     file = open('logs/error.log', 'a')
