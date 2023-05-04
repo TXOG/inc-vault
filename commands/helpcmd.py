@@ -5,6 +5,7 @@ def helpcmd():
         "\nclose: Closes the last file opened (don't forget to do this before exiting) "
         "\ndelaccount: Purge locker and reset application "
         "\nexit: Exits the program "
+        "\nexport: Decrypts a file and copies it to your export folder"
         "\nhelp: Shows this message :) "
         "\nlist: Lists all the files in your locker "
         "\nopen: Opens a file selected from a gui "

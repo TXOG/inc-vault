@@ -41,6 +41,7 @@ try:
     from commands.purgecmd import purgecmd
     from commands.removecmd import removecmd
     from commands.renamecmd import renamecmd
+    from commands.exportcmd import exportcmd
     from commands.security.hashfile import hashfile
     from commands.security.encryptions import *
     from commands.error.finishedprocess import finishedprocess
@@ -176,13 +177,14 @@ print(
 def process_command(commandinput):
     commands = {
         "add": ("addcmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
-        "open": ("opencmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
+        "open": ("opencmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir, "prevcmd": "NONE"}),
         "close": ("closecmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
         "help": ("helpcmd", {}),
         "remove": ("removecmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
         "list": ("listcmd", {"lockerdir": lockerdir}),
         "rename": ("renamecmd", {"initialdir": initialdir, "lockerdir": lockerdir}),
         "delaccount": ("deleteaccountcmd", {"initialdir": initialdir, "lockerdir": lockerdir}),
+        "export": ("exportcmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
     }
 
     for command, (function, kwargs) in commands.items():

@@ -10,7 +10,7 @@ from commands.security.hashfile import hashfile
 from commands.security.encryptions import *
 
 
-def opencmd(password, lockerdir, initialdir):
+def opencmd(password, lockerdir, initialdir, prevcmd):
     file = open('openfile.ivd', 'r+')
     mostrecentpath = file.read().strip()
     file.close()
@@ -128,10 +128,11 @@ def opencmd(password, lockerdir, initialdir):
                 os.chdir(lockerdir)
                 os.rename(filepath, revertfilename)
                 os.chdir(initialdir)
-                # open in defualt application
+                # open in default application
                 path2open = (str(lockerdir) + str('/')
                              + str(filename) + str(extension))
-                os.startfile(path2open)
+                if not prevcmd == "export":
+                    os.startfile(path2open)
             except Exception as e:
                 print("There was error while trying to open the file")
                 file = open('logs/error.log', 'a')
@@ -144,3 +145,5 @@ def opencmd(password, lockerdir, initialdir):
         namefile = (str(filename) + str(extension))
         file.write(namefile)
         file.close()
+    if prevcmd == "export":
+        return revertfilename
