@@ -9,6 +9,7 @@ def helpcmd():
         "\nhelp: Shows this message :) "
         "\nlist: Lists all the files in your locker "
         "\nopen: Opens a file selected from a gui "
-        "\npurge: Deletes all files in your locker "
+        "\npurgeexport: Deletes all files in export folder"
+        "\npurgelocker: Deletes all files in your locker "
         "\nremove: Deletes a file selected from a gui "
         "\nrename: Renames selected file")

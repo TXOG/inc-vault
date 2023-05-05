@@ -42,6 +42,7 @@ try:
     from commands.removecmd import removecmd
     from commands.renamecmd import renamecmd
     from commands.exportcmd import exportcmd
+    from commands.exportpurgecmd import purgeexportcmd
     from commands.security.hashfile import hashfile
     from commands.security.encryptions import *
     from commands.error.finishedprocess import finishedprocess
@@ -185,6 +186,7 @@ def process_command(commandinput):
         "rename": ("renamecmd", {"initialdir": initialdir, "lockerdir": lockerdir}),
         "delaccount": ("deleteaccountcmd", {"initialdir": initialdir, "lockerdir": lockerdir}),
         "export": ("exportcmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
+        "purgeexport": ("purgeexportcmd", {"initialdir": initialdir}),
     }
 
     for command, (function, kwargs) in commands.items():
@@ -199,7 +201,7 @@ while True:
     commandinput = input(">> ").lower()
     if hmac.compare_digest(commandinput, "exit"):
         exit()
-    elif hmac.compare_digest(commandinput, "purge"):
+    elif hmac.compare_digest(commandinput, "purgelocker"):
         rusure = input("Are you sure you want to purge your locker(y/n) ")
         purgecmd(rusure=rusure, lockerdir=lockerdir, initialdir=initialdir)
     elif not process_command(commandinput):
