@@ -59,3 +59,5 @@ Currently there are 12 commands. Type these commands into the interface to use t
 
 ## Credits
 Developer - Thomas Kerby
+
+Icon by icons8.com - https://icons8.com/
