@@ -2,7 +2,7 @@ import os
 import time
 import glob
 import hmac
-from commands.purgecmd import purgecmd
+from commands.purgemenu import purgecmd
 
 
 def deleteaccountcmd(initialdir, lockerdir):

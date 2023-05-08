@@ -10,7 +10,6 @@ def helpcmd():
         "\ninfo: Displays metadata about a selected file"
         "\nlist: Lists all the files in your locker "
         "\nopen: Opens a file selected from a gui "
-        "\npurgeexport: Deletes all files in export folder"
-        "\npurgelocker: Deletes all files in your locker "
+        "\npurge: Deletes all files in {-l : locker, -e : export} "
         "\nremove: Deletes a file selected from a gui "
         "\nrename: Renames selected file")
