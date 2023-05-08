@@ -43,6 +43,7 @@ try:
     from commands.renamecmd import renamecmd
     from commands.exportcmd import exportcmd
     from commands.exportpurgecmd import purgeexportcmd
+    from commands.infocmd import infocmd
     from commands.security.hashfile import hashfile
     from commands.security.encryptions import *
     from commands.error.finishedprocess import finishedprocess
@@ -187,6 +188,7 @@ def process_command(commandinput):
         "delaccount": ("deleteaccountcmd", {"initialdir": initialdir, "lockerdir": lockerdir}),
         "export": ("exportcmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
         "purgeexport": ("purgeexportcmd", {"initialdir": initialdir}),
+        "info": ("infocmd", {"lockerdir": lockerdir}),
     }
 
     for command, (function, kwargs) in commands.items():

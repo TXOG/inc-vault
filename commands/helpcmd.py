@@ -7,6 +7,7 @@ def helpcmd():
         "\nexit: Exits the program "
         "\nexport: Decrypts a file and copies it to your export folder"
         "\nhelp: Shows this message :) "
+        "\ninfo: Displays metadata about a selected file"
         "\nlist: Lists all the files in your locker "
         "\nopen: Opens a file selected from a gui "
         "\npurgeexport: Deletes all files in export folder"
