@@ -34,12 +34,14 @@ If you find any bugs or potential vulnerabilities please create an [issue](https
 
 ## Commands
 
-Currently there are 10 commands. Type these commands into the interface to use them:
+Currently there are 12 commands. Type these commands into the interface to use them:
 - add
 - close
 - delaccount
 - exit
+- export
 - help
+- info
 - list
 - open
 - purge
