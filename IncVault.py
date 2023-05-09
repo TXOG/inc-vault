@@ -178,7 +178,6 @@ print(
 def process_command(commandinput):
     commands = {
         "add": ("addcmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
-        "open": ("opencmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir, "prevcmd": "NONE"}),
         "close": ("closecmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
         "help": ("helpcmd", {}),
         "remove": ("removecmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
@@ -203,5 +202,7 @@ while True:
         exit()
     elif commandinput.startswith("purge"):
         purgemenu(lockerdir=lockerdir, initialdir=initialdir, initialinput=commandinput)
+    elif commandinput.startswith("open"):
+        opencmd(password=password, initialdir=initialdir, lockerdir=lockerdir, prevcmd=commandinput)
     elif not process_command(commandinput):
         print("Oops that's not a command \nUse help for a full list of commands")

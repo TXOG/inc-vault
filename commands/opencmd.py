@@ -19,6 +19,7 @@ def opencmd(password, lockerdir, initialdir, prevcmd):
         print("Please close the last file you opened with the command: close")
         finishedprocess()
     else:
+        splitcommand = prevcmd.split()
 
         filepath = filedialog.askopenfilename(initialdir="./locker",
                                               title="Select a File",
@@ -95,7 +96,12 @@ def opencmd(password, lockerdir, initialdir, prevcmd):
                 path2open = (str(lockerdir) + str('/')
                              + str(filename) + str(extension))
                 os.remove(backupfullfilename)
-                os.startfile(path2open)
+                try:
+                     if not hmac.compare_digest(splitcommand[1], "-n"):
+                        if not prevcmd == "export":
+                             os.startfile(path2open)
+                except:
+                    os.startfile(path2open)
             except Exception as e:
                 print(
                     "There was an error while opening this file, maybe you used the wrong password?")
@@ -131,7 +137,11 @@ def opencmd(password, lockerdir, initialdir, prevcmd):
                 # open in default application
                 path2open = (str(lockerdir) + str('/')
                              + str(filename) + str(extension))
-                if not prevcmd == "export":
+                try:
+                    if not hmac.compare_digest(splitcommand[1], "-n"):
+                        if not prevcmd == "export":
+                            os.startfile(path2open)
+                except:
                     os.startfile(path2open)
             except Exception as e:
                 print("There was error while trying to open the file")
