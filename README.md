@@ -44,7 +44,11 @@ Currently there are 12 commands. Type these commands into the interface to use t
 - info
 - list
 - open
+    - -n
+    -  
 - purge
+    - -l
+    - -e
 - remove
 - rename
 
