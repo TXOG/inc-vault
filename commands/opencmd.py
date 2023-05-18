@@ -6,11 +6,12 @@ import base64
 import hmac
 import getpass
 from commands.error.finishedprocess import finishedprocess
-from commands.security.hashfile import hashfile
+from commands.security.hashfile import *
 from commands.security.encryptions import *
 
 
-def opencmd(password, lockerdir, initialdir, prevcmd):
+def open_cmd(password, lockerdir, initialdir, prevcmd):
+    # Check if file already opened
     file = open('openfile.ivd', 'r+')
     mostrecentpath = file.read().strip()
     file.close()
@@ -18,88 +19,81 @@ def opencmd(password, lockerdir, initialdir, prevcmd):
     if not hmac.compare_digest(mostrecentpath, "NONE"):
         print("Please close the last file you opened with the command: close")
         finishedprocess()
-    else:
-        splitcommand = prevcmd.split()
+        return
 
-        filepath = filedialog.askopenfilename(initialdir="./locker",
-                                              title="Select a File",
-                                              filetypes=(("all files",
-                                                          "*.*"),
-                                                         ("all files",
-                                                          "*.*")))
-        # find filename without extension
-        filename = pathlib.Path(filepath).stem
+    split_command = prevcmd.split()
 
-        fullfilename = os.path.basename(filepath)
+    filepath = filedialog.askopenfilename(initialdir="./locker",
+                                          title="Select a File",
+                                          filetypes=(("all files",
+                                                      "*.*"),
+                                                     ("all files",
+                                                      "*.*")))
 
-        try:
-            namefile = (str(filename) + str(".ive"))
-            os.chdir(initialdir)
-            file = open(namefile, 'r+')
-            extension = file.read()
-            file.close()
-            namefile = (str(filename) + str(".ivd"))
-            file = open(namefile, 'r+')
-            data = file.read()
-            file.close()
-            namefile = (str(filename) + str(".ivs"))
-            file = open(namefile, 'r+')
-            salt = file.read()
-            file.close()
-        except Exception as e:
-            print("One or more files don't exist, to open you must restore them")
-            file = open('logs/error.log', 'a')
-            errormsg = (str(e) + str('\n'))
-            file.write(errormsg)
-            file.close()
-            finishedprocess()
-            return
+    filename = pathlib.Path(filepath).stem
+    fullfilename = os.path.basename(filepath)
 
-        # Seeing if there is a seperate password
-        if hmac.compare_digest(data, "sp"):
+    to_hash = str(str(lockerdir) + '/' + str(filename)).encode('utf-8')
+    data_file_name = str(sha1_hash(to_hash=to_hash))
+    data_file_path = str(str(initialdir) + '/data/' + data_file_name + '.data')
+
+    with open(data_file_path, 'r') as data_file:
+        file_data = data_file.read()
+        file_data = file_data.split(',')
+        extension = file_data[0]
+        salt = file_data[1]
+        second_pass = file_data[2]
+
+        if hmac.compare_digest(second_pass, "sp"):
             shutil.copy(filepath, initialdir)
             backuppath = (str(initialdir) + str('/') + str(fullfilename))
             backupfullfilename = os.path.basename(backuppath)
+
             try:
                 # getting custom password
                 custompass = getpass.getpass(prompt='Enter password: ')
-                # decrypting with orignial password first
+
                 passnsalt = (str(password) + str(salt))
                 hash = hashfile(to_hash=passnsalt)
                 key = base64.urlsafe_b64encode(hash)
+
+                # Decrypting file
                 with open(filepath, "rb") as file:
                     file_data = file.read()
                     decrypted_data = decryptfile(key=key, file_data=file_data)
                     file.close()
-                # writes to the binary of a file
                 with open(filepath, "wb") as file:
                     file.write(decrypted_data)
                     file.close()
-                # decrypting with new differnet password
+
                 cpassnsalt = (str(custompass) + str(salt))
                 hash = hashfile(to_hash=cpassnsalt)
                 key = base64.urlsafe_b64encode(hash)
+
+                # Decrypting file
                 with open(filepath, "rb") as file:
                     file_data = file.read()
                     decrypted_data = decryptfile(key=key, file_data=file_data)
                     file.close()
-                # writes to the binary of a file
                 with open(filepath, "wb") as file:
                     file.write(decrypted_data)
                     file.close()
+
                 # rename the file
                 revertfilename = (str(filename) + str(extension))
                 os.chdir(lockerdir)
                 os.rename(filepath, revertfilename)
                 os.chdir(initialdir)
-                # open in defualt application
+
+                # open in default application
                 path2open = (str(lockerdir) + str('/')
                              + str(filename) + str(extension))
                 os.remove(backupfullfilename)
                 try:
-                     if not hmac.compare_digest(splitcommand[1], "-n"):
+                    if not hmac.compare_digest(split_command[1], "-n"):
                         if not prevcmd == "export":
-                             os.startfile(path2open)
+                            os.startfile(path2open)
+
                 except:
                     os.startfile(path2open)
             except Exception as e:
@@ -118,31 +112,34 @@ def opencmd(password, lockerdir, initialdir, prevcmd):
                 return
         else:
             try:
-                # decrypting with orignial password
                 passnsalt = (str(password) + str(salt))
                 hash = hashfile(to_hash=passnsalt)
                 key = base64.urlsafe_b64encode(hash)
+
+                # Decrypting file
                 with open(filepath, "rb") as file:
                     file_data = file.read()
                     decrypted_data = decryptfile(key=key, file_data=file_data)
                     file.close()
-                # writes to the binary of a file
                 with open(filepath, "wb") as file:
                     file.write(decrypted_data)
                     file.close()
+
                 revertfilename = (str(filename) + str(extension))
                 os.chdir(lockerdir)
                 os.rename(filepath, revertfilename)
                 os.chdir(initialdir)
+
                 # open in default application
                 path2open = (str(lockerdir) + str('/')
                              + str(filename) + str(extension))
                 try:
-                    if not hmac.compare_digest(splitcommand[1], "-n"):
+                    if not hmac.compare_digest(split_command[1], "-n"):
                         if not prevcmd == "export":
                             os.startfile(path2open)
                 except:
                     os.startfile(path2open)
+
             except Exception as e:
                 print("There was error while trying to open the file")
                 file = open('logs/error.log', 'a')
@@ -151,6 +148,7 @@ def opencmd(password, lockerdir, initialdir, prevcmd):
                 file.close()
                 finishedprocess()
                 return
+
         file = open('openfile.ivd', 'w+')
         namefile = (str(filename) + str(extension))
         file.write(namefile)

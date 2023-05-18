@@ -2,11 +2,11 @@ import os
 from tkinter import filedialog
 import pathlib
 import hmac
-from commands.closecmd import closecmd
+from commands.closecmd import close_cmd
 
 
 def removecmd(password, lockerdir, initialdir):
-    closecmd(password=password, lockerdir=lockerdir, initialdir=initialdir)
+    close_cmd(password=password, lockerdir=lockerdir, initialdir=initialdir)
     couldntremove = ("NONE")
     filepath = filedialog.askopenfilename(initialdir="./locker",
                                           title="Select a File",

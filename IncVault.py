@@ -32,12 +32,12 @@ except Exception as e:
         file.close()
 
 try:
-    from commands.addcmd import addcmd
-    from commands.closecmd import closecmd
+    from commands.addcmd import *
+    from commands.closecmd import close_cmd
     from commands.delaccountcmd import deleteaccountcmd
     from commands.helpcmd import helpcmd
     from commands.listcmd import listcmd
-    from commands.opencmd import opencmd
+    from commands.opencmd import open_cmd
     from commands.removecmd import removecmd
     from commands.renamecmd import renamecmd
     from commands.exportcmd import exportcmd
@@ -45,7 +45,7 @@ try:
     from commands.purgemenu import *
     from commands.backupcmd import backup
     from commands.clear import clearcmd
-    from commands.security.hashfile import hashfile
+    from commands.security.hashfile import *
     from commands.security.encryptions import *
     from commands.error.finishedprocess import finishedprocess
 
@@ -72,6 +72,11 @@ if os.path.getsize('logs/error.log') > 1000000:
     file.truncate(0)
     file.close()
 
+if not os.path.exists('data'):
+    os.makedirs('data')
+
+if not os.path.exists('export'):
+    os.makedirs('export')
 
 
 def exit_handler():
@@ -92,7 +97,7 @@ def exit_handler():
             time.sleep(10)
         else:
             print("Looks like you didn't close a file, closing it now")
-            closecmd()
+            close_cmd()
 
 
 atexit.register(exit_handler)
@@ -164,7 +169,7 @@ try:
     file.close()
     if not hmac.compare_digest(fileopen, "NONE"):
         print("Looks like a file was left open, closing it now")
-        closecmd(password=password, initialdir=initialdir, lockerdir=lockerdir)
+        close_cmd(password=password, initialdir=initialdir, lockerdir=lockerdir)
     print("\n")
 except Exception as e:
     file = open('logs/error.log', 'a')
@@ -179,8 +184,8 @@ print(
 
 def process_command(commandinput):
     commands = {
-        "add": ("addcmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
-        "close": ("closecmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
+        "add": ("add_cmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
+        "close": ("close_cmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
         "help": ("helpcmd", {}),
         "remove": ("removecmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
         "list": ("listcmd", {"lockerdir": lockerdir}),
@@ -207,6 +212,6 @@ while True:
     elif commandinput.startswith("purge"):
         purgemenu(lockerdir=lockerdir, initialdir=initialdir, initialinput=commandinput)
     elif commandinput.startswith("open"):
-        opencmd(password=password, initialdir=initialdir, lockerdir=lockerdir, prevcmd=commandinput)
+        open_cmd(password=password, initialdir=initialdir, lockerdir=lockerdir, prevcmd=commandinput)
     elif not process_command(commandinput):
         print("Oops that's not a command \nUse help for a full list of commands")
