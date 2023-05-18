@@ -44,6 +44,7 @@ try:
     from commands.infocmd import infocmd
     from commands.purgemenu import *
     from commands.backupcmd import backup
+    from commands.clear import clearcmd
     from commands.security.hashfile import hashfile
     from commands.security.encryptions import *
     from commands.error.finishedprocess import finishedprocess
@@ -188,6 +189,7 @@ def process_command(commandinput):
         "export": ("exportcmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
         "info": ("infocmd", {"lockerdir": lockerdir}),
         "backup": ("backup", {"lockerdir": lockerdir}),
+        "clear": ("clearcmd", {}),
     }
 
     for command, (function, kwargs) in commands.items():

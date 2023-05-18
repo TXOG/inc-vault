@@ -3,6 +3,7 @@ def helpcmd():
         "Here's a list of all commands that are available at the moment: "
         "\n \nadd: Adds a file to the system "
         "\nbackup: Create a backup of locker and all files required to access locker contents"
+        "\nclear: Clears CLI"
         "\nclose: Closes the last file opened (don't forget to do this before exiting) "
         "\ndelaccount: Purge locker and reset application "
         "\nexit: Exits the program "
