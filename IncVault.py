@@ -193,7 +193,7 @@ def process_command(commandinput):
         "delaccount": ("deleteaccountcmd", {"initialdir": initialdir, "lockerdir": lockerdir}),
         "export": ("exportcmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
         "info": ("infocmd", {"lockerdir": lockerdir}),
-        "backup": ("backup", {"lockerdir": lockerdir}),
+        "backup": ("backup", {"lockerdir": lockerdir, "initialdir": initialdir}),
         "clear": ("clearcmd", {}),
     }
 

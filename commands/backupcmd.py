@@ -3,7 +3,7 @@ import shutil
 import zipfile
 
 
-def backup(lockerdir):
+def backup(lockerdir, initialdir):
     if os.path.exists('backup.zip'):
         os.remove('backup.zip')
 
@@ -11,6 +11,7 @@ def backup(lockerdir):
         os.mkdir('./backup')
 
     shutil.copytree(lockerdir, './backup/locker')
+    shutil.copytree((str(initialdir) + '/data'), './backup/data')
 
     extensions = (".ivd", ".ivp", ".ive", ".ivs")
     for filename in os.listdir("."):
