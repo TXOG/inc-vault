@@ -52,7 +52,7 @@ Coming soon
 
 ## Commands
 
-Currently there are 12 commands. Type these commands into the interface to use them:
+Currently there are 13 commands. Type these commands into the interface to use them:
 - add
 - backup
 - close
