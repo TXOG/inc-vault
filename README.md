@@ -1,11 +1,11 @@
 # IncVault
-IncVault is a command line program that provides encrypted file storage on Windows. It creates a "locker" folder that securely stores your files.
+IncVault is a command line program that provides encrypted file storage on Windows and Linux. It creates a "locker" folder that securely stores your files.
 
 ## Features
 
 - [AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard) encryption using the [Fernet](https://cryptography.io/en/latest/fernet/) algorithm to encrypt your files
 - Automatically decrypts files when you want to access them
-- Provides a secure encrypted vault for storing sensitive files on Windows
+- Provides a secure encrypted vault for storing sensitive files on Windows and Linux
 
 ## Security
 
