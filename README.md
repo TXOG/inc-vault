@@ -30,12 +30,31 @@ Please note that you should only interact with files stored in your locker throu
 If you find any bugs or potential vulnerabilities please create an [issue](https://github.com/TXOG/inc-vault/issues) in this repo
 
 
+## Install
+
+### Windows
+
+- Go to releases tab and select most recent release
+- Download installer
+- Run installer
+
+### Linux
+
+- Run command in terminal `git clone https://github.com/TXOG/inc-vault.git ; cd inc-vault ; bash pip-installs.sh ; bash add_to_bashrc.sh ; echo "installed, type inc-vault from anywhere to launch the app"`
+- Run the app by typing `inc-vault` from any path
+
+(Note that if the above script was ran with sudo, you must re-run the command ``bash pip-installs.sh`` without sudo, in order to be able to use IncVault without sudo)
+
+### Mac
+
+Coming soon
 
 
 ## Commands
 
 Currently there are 12 commands. Type these commands into the interface to use them:
 - add
+- backup
 - close
 - delaccount
 - exit
