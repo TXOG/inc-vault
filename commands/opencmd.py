@@ -82,7 +82,10 @@ def open_cmd(password, lockerdir, initialdir, prevcmd):
                     file.close()
 
                 # rename the file
-                revertfilename = (str(filename) + str(extension) + ".xz")
+                if hmac.compare_digest(enable_compression, "y"):
+                    revertfilename = (str(filename) + str(extension) + ".xz")
+                else:
+                    revertfilename = str(filename) + str(extension)
                 os.chdir(lockerdir)
                 os.rename(filepath, revertfilename)
 
@@ -92,7 +95,7 @@ def open_cmd(password, lockerdir, initialdir, prevcmd):
                         compressed_data = input_file.read()
                         decompressed_data = lzma.decompress(compressed_data)
                         output_file.write(decompressed_data)
-                    os.remove(str(lockerdir) + '/' + str(fullfilename) + ".xz")
+                    os.remove(str(lockerdir) + '/' + str(filename) + str(extension) + ".xz")
                 os.chdir(initialdir)
 
                 # open in default application
@@ -133,8 +136,10 @@ def open_cmd(password, lockerdir, initialdir, prevcmd):
                 with open(filepath, "wb") as file:
                     file.write(decrypted_data)
                     file.close()
-
-                revertfilename = (str(filename) + str(extension) + ".xz")
+                if hmac.compare_digest(enable_compression, "y"):
+                    revertfilename = (str(filename) + str(extension) + ".xz")
+                else:
+                    revertfilename = str(filename) + str(extension)
                 os.chdir(lockerdir)
                 os.rename(filepath, revertfilename)
                 if hmac.compare_digest(enable_compression, "y"):

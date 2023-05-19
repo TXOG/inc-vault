@@ -1,10 +1,10 @@
 import os
 import shutil
-import glob
 import hmac
+from commands.closecmd import close_cmd
 
 
-def purgemenu(lockerdir, initialdir, initialinput):
+def purgemenu(lockerdir, initialdir, initialinput, password):
     splitcommand = initialinput.split()
     try:
         if hmac.compare_digest(splitcommand[1], "help"):
@@ -14,7 +14,7 @@ def purgemenu(lockerdir, initialdir, initialinput):
                   )
         elif hmac.compare_digest(splitcommand[1], "-l"):
             rusure = input("Are you sure you want to purge your locker(y/n) ")
-            purgecmd(rusure=rusure, lockerdir=lockerdir, initialdir=initialdir)
+            purgecmd(rusure=rusure, lockerdir=lockerdir, initialdir=initialdir, password=password)
         elif hmac.compare_digest(splitcommand[1], "-e"):
             purgeexportcmd(initialdir=initialdir)
         else:
@@ -36,8 +36,9 @@ def purgeexportcmd(initialdir):
     return
 
 
-def purgecmd(rusure, lockerdir, initialdir):
+def purgecmd(rusure, lockerdir, initialdir, password):
     if hmac.compare_digest(rusure, "y"):
+        close_cmd(password=password, lockerdir=lockerdir, initialdir=initialdir)
         try:
             for filename in os.listdir(lockerdir):
                 file_path = os.path.join(lockerdir, filename)

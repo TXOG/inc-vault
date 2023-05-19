@@ -50,8 +50,12 @@ def close_cmd(password, lockerdir, initialdir):
             output_file.write(compressed_data)
         os.remove(file_to_compress)
 
+        encrypt_filepath = str(filename) + str(extension) + ".xz"
+    else:
+        encrypt_filepath = fullfilename
+
     if hmac.compare_digest(second_pass, "sp"):
-        custompass = getpass.getpass(prompt='Enter password a new password for this file: ')
+        custompass = getpass.getpass(prompt='Enter a new password for this file: ')
         # adds password and salt together - then encodes
         passnsalt = (str(custompass) + str(salt))
         # hashes the password and salt to use as a key
@@ -60,11 +64,11 @@ def close_cmd(password, lockerdir, initialdir):
         os.chdir(lockerdir)
 
         # Encrypt file
-        with open(str(filename) + str(extension) + ".xz", "rb") as file:
+        with open(encrypt_filepath, "rb") as file:
             file_data = file.read()
             encrypted_data = encryptfile(key=key, file_data=file_data)
             file.close()
-        with open(str(str(filename) + str(extension) + ".xz"), "wb") as file:
+        with open(encrypt_filepath, "wb") as file:
             file.write(encrypted_data)
             file.close()
 
@@ -76,16 +80,19 @@ def close_cmd(password, lockerdir, initialdir):
         os.chdir(lockerdir)
 
         # Encrypt file
-        with open(str(filename) + str(extension) + ".xz", "rb") as file:
+        with open(encrypt_filepath, "rb") as file:
             file_data = file.read()
             encrypted_data = encryptfile(key=key, file_data=file_data)
             file.close()
-        with open(str(filename) + str(extension) + ".xz", "wb") as file:
+        with open(encrypt_filepath, "wb") as file:
             file.write(encrypted_data)
             file.close()
 
         newfilename = (str(filename) + str('.ivf'))
-        os.rename(fullfilename, newfilename)
+        if hmac.compare_digest(enable_compression, "y"):
+            os.rename(str(filename) + str(extension) + ".xz", newfilename)
+        else:
+            os.rename(fullfilename, newfilename)
         os.chdir(initialdir)
     else:
         originalpassnsalt = (str(password) + str(salt))
@@ -95,16 +102,19 @@ def close_cmd(password, lockerdir, initialdir):
         os.chdir(lockerdir)
 
         # Encrypt file
-        with open(str(filename) + str(extension) + ".xz", "rb") as file:
+        with open(encrypt_filepath, "rb") as file:
             file_data = file.read()
             encrypted_data = encryptfile(key=key, file_data=file_data)
             file.close()
-        with open(str(filename) + str(extension) + ".xz", "wb") as file:
+        with open(encrypt_filepath, "wb") as file:
             file.write(encrypted_data)
             file.close()
 
         newfilename = (str(filename) + str('.ivf'))
-        os.rename(str(filename) + str(extension) + ".xz", newfilename)
+        if hmac.compare_digest(enable_compression, "y"):
+            os.rename(str(filename) + str(extension) + ".xz", newfilename)
+        else:
+            os.rename(fullfilename, newfilename)
         os.chdir(initialdir)
     file = open('openfile.ivd', 'w+')
     file.truncate(0)
@@ -112,4 +122,3 @@ def close_cmd(password, lockerdir, initialdir):
     file.close()
     print("File closed successfully")
     return
-

@@ -70,7 +70,10 @@ def add_cmd(lockerdir, password, initialdir):
         hashed = hashfile(to_hash=passnsalt)
         key = base64.urlsafe_b64encode(hashed)
         # gets new file path
-        filepath = (str('./locker/') + str(full_filename) + ".xz")
+        if hmac.compare_digest(enable_compression, "y"):
+            filepath = (str('./locker/') + str(full_filename) + ".xz")
+        else:
+            filepath = (str('./locker/') + str(full_filename))
 
         # Encrypt file
         with open(filepath, "rb") as file:
@@ -97,7 +100,10 @@ def add_cmd(lockerdir, password, initialdir):
 
         os.chdir(lockerdir)
         newfilename = (str(filename) + str('.ivf'))
-        os.rename(full_filename, newfilename)
+        if hmac.compare_digest(enable_compression, "y"):
+            os.rename(str(full_filename) + ".xz", newfilename)
+        else:
+            os.rename(str(full_filename), newfilename)
         os.chdir(initialdir)
     else:
         if invalidinput:
@@ -109,7 +115,10 @@ def add_cmd(lockerdir, password, initialdir):
         salt = bcrypt.gensalt()
 
         # gets new file path
-        filepath = (str('./locker/') + str(full_filename) + ".xz")
+        if hmac.compare_digest(enable_compression, "y"):
+            filepath = (str('./locker/') + str(full_filename) + ".xz")
+        else:
+            filepath = (str('./locker/') + str(full_filename))
         originalpassnsalt = (str(password) + str(salt))
 
         # hashes the password and salt to use as a key
@@ -127,7 +136,10 @@ def add_cmd(lockerdir, password, initialdir):
 
         os.chdir(lockerdir)
         newfilename = (str(filename) + str('.ivf'))
-        os.rename(full_filename + ".xz", newfilename)
+        if hmac.compare_digest(enable_compression, "y"):
+            os.rename(str(full_filename) + ".xz", newfilename)
+        else:
+            os.rename(str(full_filename), newfilename)
         os.chdir(initialdir)
 
     data_file_path = str(str(initialdir) + '/data/' + data_file_name + '.data')

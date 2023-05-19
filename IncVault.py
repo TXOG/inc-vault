@@ -42,7 +42,7 @@ try:
     from commands.renamecmd import renamecmd
     from commands.exportcmd import exportcmd
     from commands.infocmd import infocmd
-    from commands.purgemenu import *
+    from commands.purgemenu import purgemenu
     from commands.backupcmd import backup
     from commands.clear import clearcmd
     from commands.security.hashfile import *
@@ -61,6 +61,9 @@ except Exception as e:
 
 initialdir = pathlib.Path(__file__).parent.absolute()
 lockerdir = (str(initialdir) + str('/locker'))
+
+if not os.path.exists('logs'):
+    os.makedirs('data')
 
 if not os.path.exists('logs/error.log'):
     file = open('logs/error.log', 'w+')
@@ -190,7 +193,7 @@ def process_command(commandinput):
         "remove": ("removecmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
         "list": ("listcmd", {"lockerdir": lockerdir}),
         "rename": ("renamecmd", {"initialdir": initialdir, "lockerdir": lockerdir}),
-        "delaccount": ("deleteaccountcmd", {"initialdir": initialdir, "lockerdir": lockerdir}),
+        "delaccount": ("deleteaccountcmd", {"initialdir": initialdir, "lockerdir": lockerdir, "password": password}),
         "export": ("exportcmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
         "info": ("infocmd", {"lockerdir": lockerdir}),
         "backup": ("backup", {"lockerdir": lockerdir, "initialdir": initialdir}),
@@ -210,7 +213,7 @@ while True:
     if hmac.compare_digest(commandinput, "exit"):
         exit()
     elif commandinput.startswith("purge"):
-        purgemenu(lockerdir=lockerdir, initialdir=initialdir, initialinput=commandinput)
+        purgemenu(lockerdir=lockerdir, initialdir=initialdir, initialinput=commandinput, password=password)
     elif commandinput.startswith("open"):
         open_cmd(password=password, initialdir=initialdir, lockerdir=lockerdir, prevcmd=commandinput)
     elif not process_command(commandinput):
