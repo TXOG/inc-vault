@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "IncVault"
-#define MyAppVersion "1.1.3"
+#define MyAppVersion "1.2.0"
 #define MyAppPublisher "Thomas Kerby"
 #define MyAppURL "https://github.com/TXOG/inc-vault"
 #define MyAppExeName "IncVault.exe"
@@ -10,7 +10,7 @@
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{41130BFF-B1E7-4768-95B6-8C0414D6B006}
+AppId={{0F1E7EA7-F040-46B3-A66E-B0E7F09D1BE8}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -19,12 +19,13 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={autopf}\{#MyAppName}
-DefaultGroupName={#MyAppName}
+DisableProgramGroupPage=yes
 LicenseFile=C:\Users\Thomas\Documents\Atom Projects\inc-vault\LICENSE
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
-OutputDir=C:\Users\Thomas\Desktop\IncVault v1.1.3\INSTALLER
-OutputBaseFilename=IncVault Installer
+PrivilegesRequiredOverridesAllowed=dialog
+OutputDir=C:\Users\Thomas\Desktop\_v1.2.0_
+OutputBaseFilename=IncVault
 SetupIconFile=C:\Users\Thomas\Documents\Atom Projects\inc-vault\vaulticon.ico
 Compression=lzma
 SolidCompression=yes
@@ -37,12 +38,12 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\Thomas\Desktop\IncVault v1.1.3\IncVault\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Thomas\Desktop\IncVault v1.1.3\IncVault\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\Thomas\Desktop\_v1.2.0_\IncVault\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\Thomas\Desktop\_v1.2.0_\IncVault\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
