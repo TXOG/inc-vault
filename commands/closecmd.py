@@ -3,6 +3,7 @@ import pathlib
 import base64
 import hmac
 import getpass
+import lzma
 from commands.error.finishedprocess import finishedprocess
 from commands.security.hashfile import *
 from commands.security.encryptions import *
@@ -18,6 +19,7 @@ def close_cmd(password, lockerdir, initialdir):
         finishedprocess()
         return
 
+
     filename = pathlib.Path(mostrecentpath).stem
     fullfilename = os.path.basename(mostrecentpath).strip()
 
@@ -31,6 +33,22 @@ def close_cmd(password, lockerdir, initialdir):
         extension = file_data[0]
         salt = file_data[1]
         second_pass = file_data[2]
+        enable_compression = file_data[3]
+
+    if hmac.compare_digest(enable_compression, "y"):
+        preset_lvl = input("Which compression level would you like to use: ")
+        preset_lvl = int(preset_lvl)
+        if preset_lvl < 1 or preset_lvl > 9:
+            print("Invalid compression level, using default")
+            preset_lvl = 6
+        file_to_compress = str(str(lockerdir) + '/' + str(fullfilename))
+        print("Compressing - this may take some time")
+        with open(file_to_compress, "rb") as input_file, lzma.open(file_to_compress + ".xz", "wb",
+                                                                   preset=preset_lvl) as output_file:
+            input_data = input_file.read()
+            compressed_data = lzma.compress(input_data)
+            output_file.write(compressed_data)
+        os.remove(file_to_compress)
 
     if hmac.compare_digest(second_pass, "sp"):
         custompass = getpass.getpass(prompt='Enter password a new password for this file: ')
@@ -42,11 +60,11 @@ def close_cmd(password, lockerdir, initialdir):
         os.chdir(lockerdir)
 
         # Encrypt file
-        with open(fullfilename, "rb") as file:
+        with open(str(filename) + str(extension) + ".xz", "rb") as file:
             file_data = file.read()
             encrypted_data = encryptfile(key=key, file_data=file_data)
             file.close()
-        with open(fullfilename, "wb") as file:
+        with open(str(str(filename) + str(extension) + ".xz"), "wb") as file:
             file.write(encrypted_data)
             file.close()
 
@@ -58,11 +76,11 @@ def close_cmd(password, lockerdir, initialdir):
         os.chdir(lockerdir)
 
         # Encrypt file
-        with open(fullfilename, "rb") as file:
+        with open(str(filename) + str(extension) + ".xz", "rb") as file:
             file_data = file.read()
             encrypted_data = encryptfile(key=key, file_data=file_data)
             file.close()
-        with open(fullfilename, "wb") as file:
+        with open(str(filename) + str(extension) + ".xz", "wb") as file:
             file.write(encrypted_data)
             file.close()
 
@@ -77,16 +95,16 @@ def close_cmd(password, lockerdir, initialdir):
         os.chdir(lockerdir)
 
         # Encrypt file
-        with open(fullfilename, "rb") as file:
+        with open(str(filename) + str(extension) + ".xz", "rb") as file:
             file_data = file.read()
             encrypted_data = encryptfile(key=key, file_data=file_data)
             file.close()
-        with open(fullfilename, "wb") as file:
+        with open(str(filename) + str(extension) + ".xz", "wb") as file:
             file.write(encrypted_data)
             file.close()
 
         newfilename = (str(filename) + str('.ivf'))
-        os.rename(fullfilename, newfilename)
+        os.rename(str(filename) + str(extension) + ".xz", newfilename)
         os.chdir(initialdir)
     file = open('openfile.ivd', 'w+')
     file.truncate(0)

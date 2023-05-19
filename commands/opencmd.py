@@ -5,6 +5,7 @@ import pathlib
 import base64
 import hmac
 import getpass
+import lzma
 from commands.error.finishedprocess import finishedprocess
 from commands.security.hashfile import *
 from commands.security.encryptions import *
@@ -43,6 +44,7 @@ def open_cmd(password, lockerdir, initialdir, prevcmd):
         extension = file_data[0]
         salt = file_data[1]
         second_pass = file_data[2]
+        enable_compression = file_data[3]
 
         if hmac.compare_digest(second_pass, "sp"):
             shutil.copy(filepath, initialdir)
@@ -80,14 +82,21 @@ def open_cmd(password, lockerdir, initialdir, prevcmd):
                     file.close()
 
                 # rename the file
-                revertfilename = (str(filename) + str(extension))
+                revertfilename = (str(filename) + str(extension) + ".xz")
                 os.chdir(lockerdir)
                 os.rename(filepath, revertfilename)
+
+                if hmac.compare_digest(enable_compression, "y"):
+                    with lzma.open(str(lockerdir) + '/' + revertfilename, "rb") as input_file,\
+                            open(str(lockerdir) + '/' + str(filename) + str(extension), "wb") as output_file:
+                        compressed_data = input_file.read()
+                        decompressed_data = lzma.decompress(compressed_data)
+                        output_file.write(decompressed_data)
+                    os.remove(str(lockerdir) + '/' + str(fullfilename) + ".xz")
                 os.chdir(initialdir)
 
                 # open in default application
-                path2open = (str(lockerdir) + str('/')
-                             + str(filename) + str(extension))
+                path2open = (str(lockerdir) + str('/') + str(filename) + str(extension))
                 os.remove(backupfullfilename)
                 try:
                     if not hmac.compare_digest(split_command[1], "-n"):
@@ -125,18 +134,25 @@ def open_cmd(password, lockerdir, initialdir, prevcmd):
                     file.write(decrypted_data)
                     file.close()
 
-                revertfilename = (str(filename) + str(extension))
+                revertfilename = (str(filename) + str(extension) + ".xz")
                 os.chdir(lockerdir)
                 os.rename(filepath, revertfilename)
+                if hmac.compare_digest(enable_compression, "y"):
+                    with lzma.open(str(lockerdir) + '/' + revertfilename, "rb") as input_file, \
+                            open(str(lockerdir) + '/' + str(filename) + str(extension), "wb") as output_file:
+                        compressed_data = input_file.read()
+                        decompressed_data = lzma.decompress(compressed_data)
+                        output_file.write(decompressed_data)
+                    os.remove(str(lockerdir) + '/' + str(filename) + str(extension) + ".xz")
                 os.chdir(initialdir)
 
                 # open in default application
-                path2open = (str(lockerdir) + str('/')
-                             + str(filename) + str(extension))
+                path2open = (str(lockerdir) + str('/') + str(filename) + str(extension))
                 try:
                     if not hmac.compare_digest(split_command[1], "-n"):
                         if not prevcmd == "export":
                             os.startfile(path2open)
+
                 except:
                     os.startfile(path2open)
 
