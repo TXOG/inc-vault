@@ -1,6 +1,7 @@
 import os
 from tkinter import filedialog
 import pathlib
+from commands.security.hashfile import sha1_hash
 
 
 def renamecmd(lockerdir, initialdir):
@@ -17,15 +18,15 @@ def renamecmd(lockerdir, initialdir):
         renamepath = str(lockerdir) + str("/") + str(newname) + str(file_extension)
         os.rename(filepath, renamepath)
         filename = pathlib.Path(filepath).stem
-        namefile = (str(filename) + str(".ive"))
-        renamepath = str(initialdir) + str("/") + str(newname) + str(".ive")
-        os.rename(namefile, renamepath)
-        namefile = (str(filename) + str(".ivd"))
-        renamepath = str(initialdir) + str("/") + str(newname) + str(".ivd")
-        os.rename(namefile, renamepath)
-        namefile = (str(filename) + str(".ivs"))
-        renamepath = str(initialdir) + str("/") + str(newname) + str(".ivs")
-        os.rename(namefile, renamepath)
+
+        to_hash = str(str(lockerdir) + '/' + str(filename)).encode('utf-8')
+        data_file_name = str(sha1_hash(to_hash=to_hash))
+        old_data_file_path = str(str(initialdir) + '/data/' + data_file_name + '.data')
+        to_hash = str(str(lockerdir) + '/' + str(newname)).encode('utf-8')
+        data_file_name = str(sha1_hash(to_hash=to_hash))
+        new_data_file_path = str(str(initialdir) + '/data/' + data_file_name + '.data')
+        os.rename(old_data_file_path, new_data_file_path)
+
         print("Successfully renamed file")
     except Exception as e:
         file = open('logs/error.log', 'a')

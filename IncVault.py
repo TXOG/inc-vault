@@ -63,7 +63,7 @@ initialdir = pathlib.Path(__file__).parent.absolute()
 lockerdir = (str(initialdir) + str('/locker'))
 
 if not os.path.exists('logs'):
-    os.makedirs('data')
+    os.makedirs('logs')
 
 if not os.path.exists('logs/error.log'):
     file = open('logs/error.log', 'w+')
@@ -195,7 +195,7 @@ def process_command(commandinput):
         "rename": ("renamecmd", {"initialdir": initialdir, "lockerdir": lockerdir}),
         "delaccount": ("deleteaccountcmd", {"initialdir": initialdir, "lockerdir": lockerdir, "password": password}),
         "export": ("exportcmd", {"password": password, "initialdir": initialdir, "lockerdir": lockerdir}),
-        "info": ("infocmd", {"lockerdir": lockerdir}),
+        "info": ("infocmd", {"lockerdir": lockerdir, "initialdir": initialdir}),
         "backup": ("backup", {"lockerdir": lockerdir, "initialdir": initialdir}),
         "clear": ("clearcmd", {}),
     }

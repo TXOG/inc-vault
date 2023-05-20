@@ -2,9 +2,10 @@ import os
 from tkinter import filedialog
 import pathlib
 from datetime import datetime
+from commands.security.hashfile import sha1_hash
 
 
-def infocmd(lockerdir):
+def infocmd(lockerdir, initialdir):
     filepath = filedialog.askopenfilename(initialdir="./locker",
                                           title="Select a File",
                                           filetypes=(("all files",
@@ -12,11 +13,15 @@ def infocmd(lockerdir):
                                                      ("all files",
                                                       "*.*")))
     filename = pathlib.Path(filepath).stem
-    namefile = (str(filename) + ".ive")
-    file = open(namefile, 'r')
-    file = open(namefile, 'r+')
-    extension = file.read()
-    file.close()
+
+    to_hash = str(str(lockerdir) + '/' + str(filename)).encode('utf-8')
+    data_file_name = str(sha1_hash(to_hash=to_hash))
+    data_file_path = str(str(initialdir) + '/data/' + data_file_name + '.data')
+
+    with open(data_file_path, 'r') as data_file:
+        file_data = data_file.read()
+        file_data = file_data.split(',')
+        extension = file_data[0]
 
     file_stats = os.stat(filepath)
 
