@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "IncVault"
-#define MyAppVersion "1.2.0"
+#define MyAppVersion "1.2.1"
 #define MyAppPublisher "Thomas Kerby"
 #define MyAppURL "https://github.com/TXOG/inc-vault"
 #define MyAppExeName "IncVault.exe"
@@ -10,7 +10,7 @@
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{0F1E7EA7-F040-46B3-A66E-B0E7F09D1BE8}
+AppId={{003AAEA0-DE23-4F1E-8316-4CAFD1BCF7A4}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -24,8 +24,8 @@ LicenseFile=C:\Users\Thomas\Documents\Atom Projects\inc-vault\LICENSE
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputDir=C:\Users\Thomas\Desktop\_v1.2.0_
-OutputBaseFilename=IncVault
+OutputDir=C:\Users\Thomas\Desktop\_1.2.1_
+OutputBaseFilename=IncVault Setup - WINDOWS
 SetupIconFile=C:\Users\Thomas\Documents\Atom Projects\inc-vault\vaulticon.ico
 Compression=lzma
 SolidCompression=yes
@@ -38,8 +38,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\Thomas\Desktop\_v1.2.0_\IncVault\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Thomas\Desktop\_v1.2.0_\IncVault\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\Thomas\Desktop\_1.2.1_\IncVault\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\Thomas\Desktop\_1.2.1_\IncVault\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
