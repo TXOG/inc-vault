@@ -26,10 +26,7 @@ def open_cmd(password, lockerdir, initialdir, prevcmd):
 
     filepath = filedialog.askopenfilename(initialdir="./locker",
                                           title="Select a File",
-                                          filetypes=(("all files",
-                                                      "*.*"),
-                                                     ("all files",
-                                                      "*.*")))
+                                          filetypes=(("IVF files", "*.ivf"),))
 
     filename = pathlib.Path(filepath).stem
     fullfilename = os.path.basename(filepath)
