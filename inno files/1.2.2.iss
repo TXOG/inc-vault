@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "IncVault"
-#define MyAppVersion "1.2.1"
+#define MyAppVersion "1.2.2"
 #define MyAppPublisher "Thomas Kerby"
 #define MyAppURL "https://github.com/TXOG/inc-vault"
 #define MyAppExeName "IncVault.exe"
@@ -10,7 +10,7 @@
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{003AAEA0-DE23-4F1E-8316-4CAFD1BCF7A4}
+AppId={{33C6BA33-5A94-4762-8849-00771FF60A90}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -20,13 +20,13 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
-LicenseFile=C:\Users\Thomas\Documents\Atom Projects\inc-vault\LICENSE
+LicenseFile=C:\Users\TXOGF\Desktop\IncVault\LICENSE
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputDir=C:\Users\Thomas\Desktop\_1.2.1_
-OutputBaseFilename=IncVault Setup - WINDOWS
-SetupIconFile=C:\Users\Thomas\Documents\Atom Projects\inc-vault\vaulticon.ico
+OutputDir=C:\Users\TXOGF\Desktop\Inno Output
+OutputBaseFilename=IncVault
+SetupIconFile=C:\Users\TXOGF\Desktop\IncVault\vaulticon.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -38,8 +38,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\Thomas\Desktop\_1.2.1_\IncVault\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Thomas\Desktop\_1.2.1_\IncVault\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\TXOGF\Desktop\IncVault\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\TXOGF\Desktop\IncVault\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
