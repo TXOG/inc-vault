@@ -42,6 +42,7 @@ def open_cmd(password, lockerdir, initialdir, prevcmd):
         salt = file_data[1]
         second_pass = file_data[2]
         enable_compression = file_data[3]
+        hash_salt = file_data[4]
 
         if hmac.compare_digest(second_pass, "sp"):
             shutil.copy(filepath, initialdir)
@@ -53,7 +54,7 @@ def open_cmd(password, lockerdir, initialdir, prevcmd):
                 custompass = getpass.getpass(prompt='Enter password: ')
 
                 passnsalt = (str(password) + str(salt))
-                hash = hashfile(to_hash=passnsalt)
+                hash = hashfile(to_hash=passnsalt, hash_salt=hash_salt)
                 key = base64.urlsafe_b64encode(hash)
 
                 # Decrypting file
@@ -66,7 +67,7 @@ def open_cmd(password, lockerdir, initialdir, prevcmd):
                     file.close()
 
                 cpassnsalt = (str(custompass) + str(salt))
-                hash = hashfile(to_hash=cpassnsalt)
+                hash = hashfile(to_hash=cpassnsalt, hash_salt=hash_salt)
                 key = base64.urlsafe_b64encode(hash)
 
                 # Decrypting file
@@ -122,7 +123,7 @@ def open_cmd(password, lockerdir, initialdir, prevcmd):
         else:
             try:
                 passnsalt = (str(password) + str(salt))
-                hash = hashfile(to_hash=passnsalt)
+                hash = hashfile(to_hash=passnsalt, hash_salt=hash_salt)
                 key = base64.urlsafe_b64encode(hash)
 
                 # Decrypting file

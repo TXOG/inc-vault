@@ -21,6 +21,12 @@ def add_cmd(lockerdir, password, initialdir):
     if not filepath:
         return
 
+    while True:
+        hash_salt = bcrypt.gensalt()
+        decode_hash_salt = hash_salt.decode('utf-8')
+        if ',' not in decode_hash_salt:
+            break
+
     file_extension = pathlib.Path(filepath).suffix
     filename = pathlib.Path(filepath).stem
     full_filename = os.path.basename(filepath)
@@ -59,7 +65,11 @@ def add_cmd(lockerdir, password, initialdir):
 
     if hmac.compare_digest(newpass, "y"):
         second_pass = "sp"
-        salt = bcrypt.gensalt()
+        while True:
+            salt = bcrypt.gensalt()
+            decode_salt = salt.decode('utf-8')
+            if ',' not in decode_salt:
+                break
 
         # gets the user to input their password
         custompass = getpass.getpass(prompt='Enter password for this file: ')
@@ -67,7 +77,7 @@ def add_cmd(lockerdir, password, initialdir):
         passnsalt = (str(custompass) + str(salt))
 
         # hashes the password and salt to use as a key
-        hashed = hashfile(to_hash=passnsalt)
+        hashed = hashfile(to_hash=passnsalt, hash_salt=hash_salt)
         key = base64.urlsafe_b64encode(hashed)
         # gets new file path
         if hmac.compare_digest(enable_compression, "y"):
@@ -86,7 +96,7 @@ def add_cmd(lockerdir, password, initialdir):
 
         originalpassnsalt = (str(password) + str(salt))
         # hashes the password and salt to use as a key
-        hashed = hashfile(to_hash=originalpassnsalt)
+        hashed = hashfile(to_hash=originalpassnsalt, hash_salt=hash_salt)
         key = base64.urlsafe_b64encode(hashed)
 
         # Encrypt file
@@ -112,7 +122,11 @@ def add_cmd(lockerdir, password, initialdir):
             print("Using default password")
 
         second_pass = "nsp"
-        salt = bcrypt.gensalt()
+        while True:
+            salt = bcrypt.gensalt()
+            decode_salt = salt.decode('utf-8')
+            if ',' not in decode_salt:
+                break
 
         # gets new file path
         if hmac.compare_digest(enable_compression, "y"):
@@ -122,7 +136,7 @@ def add_cmd(lockerdir, password, initialdir):
         originalpassnsalt = (str(password) + str(salt))
 
         # hashes the password and salt to use as a key
-        hashed = hashfile(to_hash=originalpassnsalt)
+        hashed = hashfile(to_hash=originalpassnsalt, hash_salt=hash_salt)
         key = base64.urlsafe_b64encode(hashed)
 
         # Encrypt file
@@ -150,7 +164,9 @@ def add_cmd(lockerdir, password, initialdir):
                            + ','
                            + str(second_pass)
                            + ','
-                           + str(enable_compression))
+                           + str(enable_compression)
+                           + ','
+                           + str(hash_salt))
         data_file.write(file_content)
 
     print("File added successfully")

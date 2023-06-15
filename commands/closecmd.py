@@ -34,6 +34,7 @@ def close_cmd(password, lockerdir, initialdir):
         salt = file_data[1]
         second_pass = file_data[2]
         enable_compression = file_data[3]
+        hash_salt = file_data[4]
 
     if hmac.compare_digest(enable_compression, "y"):
         preset_lvl = input("Which compression level would you like to use: ")
@@ -59,7 +60,7 @@ def close_cmd(password, lockerdir, initialdir):
         # adds password and salt together - then encodes
         passnsalt = (str(custompass) + str(salt))
         # hashes the password and salt to use as a key
-        hashed = hashfile(to_hash=passnsalt)
+        hashed = hashfile(to_hash=passnsalt, hash_salt=hash_salt)
         key = base64.urlsafe_b64encode(hashed)
         os.chdir(lockerdir)
 
@@ -75,7 +76,7 @@ def close_cmd(password, lockerdir, initialdir):
         os.chdir(initialdir)
         originalpassnsalt = (str(password) + str(salt))
         # hashes the password and salt to use as a key
-        hashed = hashfile(to_hash=originalpassnsalt)
+        hashed = hashfile(to_hash=originalpassnsalt, hash_salt=hash_salt)
         key = base64.urlsafe_b64encode(hashed)
         os.chdir(lockerdir)
 
@@ -97,7 +98,7 @@ def close_cmd(password, lockerdir, initialdir):
     else:
         originalpassnsalt = (str(password) + str(salt))
         # hashes the password and salt to use as a key
-        hashed = hashfile(to_hash=originalpassnsalt)
+        hashed = hashfile(to_hash=originalpassnsalt, hash_salt=hash_salt)
         key = base64.urlsafe_b64encode(hashed)
         os.chdir(lockerdir)
 

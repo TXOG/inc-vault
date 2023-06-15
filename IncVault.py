@@ -120,9 +120,15 @@ def setup():
         else:
             policy = True
 
-    hashed = hashfile(to_hash=password)
+    while True:
+        hash_salt = bcrypt.gensalt()
+        decode_hash_salt = hash_salt.decode('utf-8')
+        if ',' not in decode_hash_salt:
+            break
+
+    hashed = hashfile(to_hash=password, hash_salt=hash_salt)
     file = open('password.ivp', 'w+')
-    writehashed = str(hashed)
+    writehashed = str(hashed) + ',' + str(hash_salt)
     file.write(writehashed)
     file.close()
     newpath = r'./locker'
@@ -145,9 +151,10 @@ def check_setup():
             password = getpass.getpass(prompt='Enter password: ')
             file = open('password.ivp', 'r')
             checkhash = file.read()
+            checkhash = checkhash.split(',')
             file.close()
-            passwordcheck = hashfile(to_hash=password)
-            if hmac.compare_digest(str(passwordcheck), str(checkhash)):
+            passwordcheck = hashfile(to_hash=password, hash_salt=checkhash[1])
+            if hmac.compare_digest(str(passwordcheck), str(checkhash[0])):
                 passnotcorrect = False
                 os.system('cls||clear')
             else:
