@@ -47,7 +47,7 @@ If you find any bugs or potential vulnerabilities please create an [issue](https
 
 ### Mac
 
-Coming soon
+Not planned (no mac device)
 
 
 ## Commands
