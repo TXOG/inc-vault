@@ -7,8 +7,8 @@ import base64
 import hmac
 import getpass
 import lzma
-from commands.security.hashfile import *
-from commands.security.encryptions import *
+from iscript.security.hash import *
+from iscript.security.encryption import *
 
 
 def add_cmd(lockerdir, password, initialdir):

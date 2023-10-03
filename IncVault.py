@@ -32,22 +32,22 @@ except Exception as e:
         file.close()
 
 try:
-    from commands.addcmd import *
-    from commands.closecmd import close_cmd
-    from commands.delaccountcmd import deleteaccountcmd
-    from commands.helpcmd import helpcmd
-    from commands.listcmd import listcmd
-    from commands.opencmd import open_cmd
-    from commands.removecmd import removecmd
-    from commands.renamecmd import renamecmd
-    from commands.exportcmd import exportcmd
-    from commands.infocmd import infocmd
-    from commands.purgemenu import purgemenu
-    from commands.backupcmd import backup
-    from commands.clear import clearcmd
-    from commands.security.hashfile import *
-    from commands.security.encryptions import *
-    from commands.error.finishedprocess import finishedprocess
+    from iscript.commands.addcmd import *
+    from iscript.commands.closecmd import close_cmd
+    from iscript.commands.delaccountcmd import deleteaccountcmd
+    from iscript.commands.helpcmd import helpcmd
+    from iscript.commands.listcmd import listcmd
+    from iscript.commands.opencmd import open_cmd
+    from iscript.commands.removecmd import removecmd
+    from iscript.commands.renamecmd import renamecmd
+    from iscript.commands.exportcmd import exportcmd
+    from iscript.commands.infocmd import infocmd
+    from iscript.commands.purgemenu import purgemenu
+    from iscript.commands.backupcmd import backup
+    from iscript.commands.clear import clearcmd
+    from iscript.security.hash import *
+    from iscript.security.encryption import *
+    from iscript.error.finishedprocess import finishedprocess
 
 except Exception as e:
     print("You are missing a command, exiting in 10 seconds")
@@ -188,7 +188,7 @@ except Exception as e:
     file.close()
     print("\n")
 print(
-    "Enter help for full list of commands \nRemember to close the last file before exiting \nPlease only exit using the"
+    "Enter help for full list of iscript \nRemember to close the last file before exiting \nPlease only exit using the"
     " command exit")
 
 
@@ -224,4 +224,4 @@ while True:
     elif commandinput.startswith("open"):
         open_cmd(password=password, initialdir=initialdir, lockerdir=lockerdir, prevcmd=commandinput)
     elif not process_command(commandinput):
-        print("Oops that's not a command \nUse help for a full list of commands")
+        print("Oops that's not a command \nUse help for a full list of iscript")

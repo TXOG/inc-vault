@@ -2,8 +2,8 @@ import os
 from tkinter import filedialog
 import pathlib
 import hmac
-from commands.closecmd import close_cmd
-from commands.security.hashfile import sha1_hash
+from iscript.commands.closecmd import close_cmd
+from iscript.security.hash import sha1_hash
 
 
 def removecmd(password, lockerdir, initialdir):

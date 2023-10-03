@@ -6,9 +6,9 @@ import base64
 import hmac
 import getpass
 import lzma
-from commands.error.finishedprocess import finishedprocess
-from commands.security.hashfile import *
-from commands.security.encryptions import *
+from iscript.error.finishedprocess import finishedprocess
+from iscript.security.hash import *
+from iscript.security.encryption import *
 
 
 def open_cmd(password, lockerdir, initialdir, prevcmd):

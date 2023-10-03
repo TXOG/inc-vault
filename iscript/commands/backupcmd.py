@@ -14,9 +14,9 @@ def backup(lockerdir, initialdir):
     shutil.copytree((str(initialdir) + '/data'), './backup/data')
 
     extensions = (".ivd", ".ivp", ".ive", ".ivs")
-    for filename in os.listdir("."):
+    for filename in os.listdir(".."):
         if filename.endswith(extensions):
-            source_path = os.path.join(".", filename)
+            source_path = os.path.join("..", filename)
             destination_path = os.path.join('./backup/', filename)
             shutil.copy(source_path, destination_path)
 

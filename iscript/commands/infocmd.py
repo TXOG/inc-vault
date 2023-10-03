@@ -2,7 +2,7 @@ import os
 from tkinter import filedialog
 import pathlib
 from datetime import datetime
-from commands.security.hashfile import sha1_hash
+from iscript.security.hash import sha1_hash
 
 
 def infocmd(lockerdir, initialdir):

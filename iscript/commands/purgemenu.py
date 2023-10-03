@@ -1,7 +1,7 @@
 import os
 import shutil
 import hmac
-from commands.closecmd import close_cmd
+from iscript.commands.closecmd import close_cmd
 
 
 def purgemenu(lockerdir, initialdir, initialinput, password):

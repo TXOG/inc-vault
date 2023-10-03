@@ -1,7 +1,7 @@
 import os
 from tkinter import filedialog
 import pathlib
-from commands.security.hashfile import sha1_hash
+from iscript.security.hash import sha1_hash
 
 
 def renamecmd(lockerdir, initialdir):
