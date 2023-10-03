@@ -12,16 +12,6 @@ from iscript.security.encryption import *
 
 
 def open_cmd(password, lockerdir, initialdir, prevcmd):
-    # Check if file already opened
-    file = open('openfile.ivd', 'r+')
-    mostrecentpath = file.read().strip()
-    file.close()
-
-    if not hmac.compare_digest(mostrecentpath, "NONE"):
-        print("Please close the last file you opened with the command: close")
-        finishedprocess()
-        return
-
     split_command = prevcmd.split()
 
     filepath = filedialog.askopenfilename(initialdir="./locker",
@@ -168,9 +158,26 @@ def open_cmd(password, lockerdir, initialdir, prevcmd):
                 finishedprocess()
                 return
 
-        file = open('openfile.ivd', 'w+')
-        namefile = (str(filename) + str(extension))
-        file.write(namefile)
-        file.close()
+        # file = open('openfile.ivd', 'w+')
+        # namefile = (str(filename) + str(extension))
+        # file.write(namefile)
+        # file.close()
+
+        with open('openfile.ivd', 'r') as file:
+            fileContents = file.read()
+
+        if fileContents == "NONE":
+            with open ('openfile.ivd', 'w+') as file:
+                file.truncate(0)
+                fileContents = ""
+
+        if fileContents:
+            fileContents += '|' + str(filename) + str(extension)
+        else:
+            fileContents = str(filename) + str(extension)
+
+        with open('openfile.ivd', 'w') as file:
+            file.write(fileContents.strip())
+
     if prevcmd == "export":
         return revertfilename

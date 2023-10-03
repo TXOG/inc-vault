@@ -188,7 +188,7 @@ except Exception as e:
     file.close()
     print("\n")
 print(
-    "Enter help for full list of iscript \nRemember to close the last file before exiting \nPlease only exit using the"
+    "Enter help for full list of commands \nRemember to close the last file before exiting \nPlease only exit using the"
     " command exit")
 
 
